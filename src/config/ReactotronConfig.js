@@ -1,11 +1,11 @@
-import Reactotron from 'reactotron-react-native';
+import Reactotron, { trackGlobalErrors } from "reactotron-react-native"
 
 if (__DEV__) {
   const tron = Reactotron.configure()
     .useReactNative()
-    .connect();
+    .use(trackGlobalErrors())
+    .connect()
 
-  tron.clear();
-
-  console.tron = tron;
+  console.tron = tron.log
+  console.trom = tron.log
 }

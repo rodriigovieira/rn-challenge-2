@@ -4,14 +4,19 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "ios": "react-native run-ios",
+    "android": "react-native run-android"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.4.1",
     "axios": "^0.18.0",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
     "react-native": "0.59.8",
     "react-native-gesture-handler": "^1.2.1",
+    "react-native-modal": "^11.0.1",
+    "react-native-status-bar-height": "^2.3.1",
     "react-navigation": "^3.11.0",
     "reactotron-react-native": "^3.5.2",
     "styled-components": "^4.2.0"

@@ -24,7 +24,8 @@
       { "extensions": [".js", ".jsx"] }
     ],
     "import/prefer-default-export": "off",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-unused-vars": 1,
+    "react/self-closing-comp": 1,
     "semi": 0,
     "quotes": 0,
     "comma-dangle": 0,
