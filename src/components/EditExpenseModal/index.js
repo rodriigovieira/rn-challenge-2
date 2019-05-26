@@ -1,7 +1,7 @@
 import React, { useState } from "react"
+import { ActivityIndicator } from "react-native"
 import Modal from "react-native-modal"
 import PropTypes from "prop-types"
-import { ActivityIndicator } from "react-native"
 
 import {
   Container,
@@ -11,47 +11,64 @@ import {
   ExpenseTypeContainer,
   ExpensesTextContainer,
   ExpenseTypeText,
+  ExpenseValueTextInput,
   ButtonsContainer,
   OperatorButton,
   OperatorButtonText,
   Divider,
-  ValueContainer,
-  ValueText,
   DescriptionContainer,
   DescriptionTextInput,
   ConfirmButton,
   ConfirmButtonText
 } from "./styles"
+import api from "~/services/api"
 
-const AddExpenseModal = ({
-  value,
+const EditExpenseModal = ({
+  expense: {
+    value: propValue, description: propDescription, id, type: propType
+  },
   modal,
-  isAdding,
   onBackdropPress,
-  handleSubmit,
-  loading,
-  description,
-  setDescription
+  handleRefresh
 }) => {
-  const [showPlusColor, setShowPlusColor] = useState(isAdding)
-  const [showMinusColor, setShowMinusColor] = useState(!isAdding)
+  const [showPlusColor, setShowPlusColor] = useState(propType === "positive")
+  const [showMinusColor, setShowMinusColor] = useState(propType === "negative")
+  const [loading, setLoading] = useState(false)
+
+  const [description, setDescription] = useState(propDescription)
+  const [value, setValue] = useState(propValue)
+  const [type, setType] = useState(propType)
 
   const color = showMinusColor ? "rgba(231, 76, 60, 1)" : "rgba(170, 198, 149, 1)"
-
-  React.useEffect(() => {
-    setShowPlusColor(isAdding)
-
-    setShowMinusColor(!isAdding)
-  }, [isAdding])
 
   const handlePlusClick = () => {
     setShowPlusColor(true)
     setShowMinusColor(false)
+    setType("positive")
   }
 
   const handleMinusClick = () => {
     setShowPlusColor(false)
     setShowMinusColor(true)
+    setType("negative")
+  }
+
+  const handleSubmit = () => {
+    setLoading(true)
+
+    const object = {
+      value,
+      description,
+      type
+    }
+
+    api
+      .patch(`/expenses/${id}.json`, JSON.stringify(object))
+      .then(() => {
+        setLoading(false)
+        handleRefresh()
+      })
+      .catch(() => setLoading(false))
   }
 
   return (
@@ -59,7 +76,7 @@ const AddExpenseModal = ({
       <Modal onBackdropPress={onBackdropPress} isVisible={modal}>
         <ContentContainer>
           <ModalTitle>
-            <ModalTitleText>Create Expense</ModalTitleText>
+            <ModalTitleText>Edit Expense</ModalTitleText>
           </ModalTitle>
 
           <ExpenseTypeContainer>
@@ -80,6 +97,16 @@ const AddExpenseModal = ({
             </ButtonsContainer>
           </ExpenseTypeContainer>
 
+          <ExpenseTypeContainer>
+            <ExpensesTextContainer>
+              <ExpenseTypeText>Value:</ExpenseTypeText>
+            </ExpensesTextContainer>
+
+            <ExpenseValueTextInput keyboardType="numeric" onChangeText={setValue} color={color}>
+              {value}
+            </ExpenseValueTextInput>
+          </ExpenseTypeContainer>
+
           <DescriptionContainer color={color}>
             <DescriptionTextInput
               value={description}
@@ -88,10 +115,6 @@ const AddExpenseModal = ({
               multiline
             />
           </DescriptionContainer>
-
-          <ValueContainer isAdding={showPlusColor}>
-            <ValueText color={color}>{`$${value}`}</ValueText>
-          </ValueContainer>
 
           <ConfirmButton color={color} onPress={handleSubmit}>
             {loading ? (
@@ -106,15 +129,16 @@ const AddExpenseModal = ({
   )
 }
 
-AddExpenseModal.propTypes = {
-  value: PropTypes.string.isRequired,
+EditExpenseModal.propTypes = {
   modal: PropTypes.bool.isRequired,
-  isAdding: PropTypes.bool.isRequired,
   onBackdropPress: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  description: PropTypes.string.isRequired,
-  setDescription: PropTypes.func.isRequired
+  expense: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired
+  }).isRequired,
+  handleRefresh: PropTypes.func.isRequired
 }
 
-export default AddExpenseModal
+export default EditExpenseModal

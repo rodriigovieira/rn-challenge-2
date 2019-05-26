@@ -20,7 +20,7 @@ export const StatusBar = styled.View`
 `
 
 export const StatusBarText = styled.Text`
-margin: 0 auto;
+  margin: 0 auto;
   font-size: 18px;
   font-weight: bold;
 `

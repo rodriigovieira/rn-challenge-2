@@ -9,8 +9,8 @@ It features a simple Firebase integration, and all the data is fetched from a pu
 # Screenshots
 
 <img src="/assets_github/HomePage.jpeg" height="490"> <img src="/assets_github/CreateExpenseGreen.jpeg" height="490"> <img src="/assets_github/CreateExpenseRed.jpeg" height="490">
+<br />
 <img src="/assets_github/ExpensesPage.jpeg" height="490"> <img src="/assets_github/Drawer.jpeg" height="490"> <img src="/assets_github/HomePageError.jpeg" height="490">
-
 
 # Installation
 

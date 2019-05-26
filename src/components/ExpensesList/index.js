@@ -1,5 +1,7 @@
 import React from "react"
-import { ActivityIndicator, ScrollView, View } from "react-native"
+import {
+  ActivityIndicator, ScrollView, View, RefreshControl, Text
+} from "react-native"
 
 import Expense from "~/components/Expense"
 
@@ -9,21 +11,24 @@ const ExpensesList = ({ navigation }) => {
   const [data, setData] = React.useState([])
   const [loading, setLoading] = React.useState(false)
 
-  const created = navigation.getParam('created')
+  const created = navigation.getParam("created")
 
-  React.useEffect(() => {
+  const handleRefresh = () => {
     setLoading(true)
 
     api
       .get("/expenses.json")
       .then((res) => {
+        if (!res.data) setData([])
+
         const array = []
 
         Object.keys(res.data).forEach((key) => {
           array.push({
             id: key,
             type: res.data[key].type,
-            value: res.data[key].value
+            value: res.data[key].value,
+            description: res.data[key].description
           })
         })
 
@@ -32,6 +37,10 @@ const ExpensesList = ({ navigation }) => {
         setLoading(false)
       })
       .catch(() => setLoading(false))
+  }
+
+  React.useEffect(() => {
+    handleRefresh()
   }, [created])
 
   if (loading) {
@@ -44,9 +53,16 @@ const ExpensesList = ({ navigation }) => {
 
   return (
     <ScrollView style={{ width: "100%" }}>
-      {data.map(expense => (
-        <Expense key={expense.id} expense={{ ...expense }} />
-      ))}
+      <>
+        <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+        {data.length > 0 ? (
+          data.map(expense => (
+            <Expense handleRefresh={handleRefresh} key={expense.id} expense={{ ...expense }} />
+          ))
+        ) : (
+          <Text>No expense available.</Text>
+        )}
+      </>
     </ScrollView>
   )
 }

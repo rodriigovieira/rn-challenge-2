@@ -7,7 +7,7 @@ const Container = styled.View`
 const ContentContainer = styled.View`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9);
-  height: 475px;
+  min-height: 400px;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 1);
 `
@@ -29,12 +29,15 @@ const ExpenseTypeContainer = styled.View`
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.6);
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
+  flex: 1;
 `
 
 const ExpensesTextContainer = styled.View`
   justify-content: center;
-  width: 50px;
+  align-items: center;
+  width: 60px;
 `
 
 const ExpenseTypeText = styled.Text`
@@ -95,6 +98,7 @@ const ConfirmButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   background-color: ${props => props.color};
+  margin-bottom: 20px;
 `
 
 const ConfirmButtonText = styled.Text`
@@ -115,6 +119,14 @@ export const DescriptionContainer = styled.View`
 
 export const DescriptionTextInput = styled.TextInput`
   font-size: 22px;
+`
+
+export const ExpenseValueTextInput = styled.TextInput`
+  font-size: 22px;
+  color: ${props => props.color};
+  border: 0px solid ${props => props.color};
+  border-bottom-width: 1px;
+  width: 150px;
 `
 
 export {

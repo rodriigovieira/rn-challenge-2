@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures"
 
 import {
   Container,
@@ -30,7 +31,9 @@ const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "00", ","]
 // eslint-disable-next-line
 const MainPage = ({ navigation }) => {
   const [bigText, setBigText] = useState("")
+  const [description, setDescription] = useState("")
   const [operator, setOperator] = useState("+")
+
   const [showModal, setShowModal] = useState(false)
   const [showError, setShowError] = useState(false)
   const [loading, setLoading] = React.useState(false)
@@ -55,7 +58,8 @@ const MainPage = ({ navigation }) => {
 
     const object = {
       type: operator === "+" ? "positive" : "negative",
-      value: bigText
+      value: bigText,
+      description
     }
 
     api
@@ -72,6 +76,19 @@ const MainPage = ({ navigation }) => {
       .catch(() => setLoading(false))
   }
 
+  const onSwipe = (gestureName) => {
+    const { SWIPE_LEFT } = swipeDirections
+
+    const newString = bigText.slice(0, bigText.length - 1)
+
+    if (gestureName === SWIPE_LEFT) setBigText(newString)
+  }
+
+  const config = {
+    velocityThreshold: 0.05,
+    directionalOffsetThreshold: 10
+  }
+
   return (
     <Container>
       <StatusBar>
@@ -81,13 +98,16 @@ const MainPage = ({ navigation }) => {
         <StatusBarText>HomePage</StatusBarText>
       </StatusBar>
 
-      <BigTextContainer showError={showError}>
-        <BigTextDisplay onPress={setOperator} operator={operator}>
-          {bigText || 0}
-        </BigTextDisplay>
+      <GestureRecognizer
+        config={config}
+        onSwipe={direction => onSwipe(direction)}
+      >
+        <BigTextContainer showError={showError}>
+          <BigTextDisplay operator={operator}>{bigText || 0}</BigTextDisplay>
 
-        {showError && <ErrorTextDisplay>Please insert a value.</ErrorTextDisplay>}
-      </BigTextContainer>
+          {showError && <ErrorTextDisplay>Please insert a value.</ErrorTextDisplay>}
+        </BigTextContainer>
+      </GestureRecognizer>
 
       <ButtonsContainer>
         <OperatorsContainer>
@@ -124,9 +144,10 @@ const MainPage = ({ navigation }) => {
         modal={showModal}
         value={bigText}
         isAdding={operator === "+"}
-        navigation={navigation}
         handleSubmit={handleSubmit}
         loading={loading}
+        setDescription={setDescription}
+        description={description}
       />
     </Container>
   )

@@ -6,22 +6,18 @@ import {
   Container, StatusBar, StatusBarText, DrawerButton, DrawerButtonText
 } from "./styles"
 
-const ExpensesPage = ({ navigation }) => {
-  const oi = "oi"
+const ExpensesPage = ({ navigation }) => (
+  <Container>
+    <StatusBar>
+      <DrawerButton onPress={() => navigation.openDrawer()}>
+        <DrawerButtonText>X</DrawerButtonText>
+      </DrawerButton>
 
-  return (
-    <Container>
-      <StatusBar>
-        <DrawerButton onPress={() => navigation.openDrawer()}>
-          <DrawerButtonText>X</DrawerButtonText>
-        </DrawerButton>
+      <StatusBarText>Expenses Page</StatusBarText>
+    </StatusBar>
 
-        <StatusBarText>Expenses Page</StatusBarText>
-      </StatusBar>
-
-      <ExpensesList navigation={navigation} />
-    </Container>
-  )
-}
+    <ExpensesList navigation={navigation} />
+  </Container>
+)
 
 export default ExpensesPage
