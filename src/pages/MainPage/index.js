@@ -3,10 +3,6 @@ import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures"
 
 import {
   Container,
-  StatusBar,
-  DrawerButton,
-  DrawerButtonText,
-  StatusBarText,
   BigTextContainer,
   BigTextDisplay,
   ButtonsContainer,
@@ -23,10 +19,11 @@ import {
 } from "./styles"
 
 import AddExpenseModal from "~/components/AddExpenseModal"
+import Header from "~/components/Header"
 
 import api from "~/services/api"
 
-const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "00", ","]
+const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "00", "."]
 
 // eslint-disable-next-line
 const MainPage = ({ navigation }) => {
@@ -39,12 +36,21 @@ const MainPage = ({ navigation }) => {
   const [loading, setLoading] = React.useState(false)
 
   const handleNumberPress = (number) => {
+    if ((number === "0" || number === "00" || number === ".") && !bigText) return
+
+    if (number === "." && bigText.includes(number)) return
+
     setBigText(`${bigText}${number}`)
 
     setShowError(false)
   }
 
   const handlePress = () => {
+    if (bigText[bigText.length - 1] === ".") {
+      setShowError(true)
+      return
+    }
+
     if (!bigText) {
       setShowError(true)
       return
@@ -68,9 +74,10 @@ const MainPage = ({ navigation }) => {
         setLoading(false)
         setShowModal(false)
         setBigText("")
+        setDescription("")
 
         navigation.navigate("ExpensesPage", {
-          created: true
+          created: Math.random()
         })
       })
       .catch(() => setLoading(false))
@@ -91,21 +98,13 @@ const MainPage = ({ navigation }) => {
 
   return (
     <Container>
-      <StatusBar>
-        <DrawerButton onPress={() => navigation.openDrawer()}>
-          <DrawerButtonText>X</DrawerButtonText>
-        </DrawerButton>
-        <StatusBarText>HomePage</StatusBarText>
-      </StatusBar>
+      <Header title="MainPage" navigation={navigation} hideFilter />
 
-      <GestureRecognizer
-        config={config}
-        onSwipe={direction => onSwipe(direction)}
-      >
+      <GestureRecognizer config={config} onSwipe={direction => onSwipe(direction)}>
         <BigTextContainer showError={showError}>
           <BigTextDisplay operator={operator}>{bigText || 0}</BigTextDisplay>
 
-          {showError && <ErrorTextDisplay>Please insert a value.</ErrorTextDisplay>}
+          {showError && <ErrorTextDisplay>Please insert a valid value.</ErrorTextDisplay>}
         </BigTextContainer>
       </GestureRecognizer>
 

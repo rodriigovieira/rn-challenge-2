@@ -1,9 +1,11 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import Swipeout from "react-native-swipeout"
-import { ActivityIndicator } from "react-native"
+import { ActivityIndicator, Alert } from "react-native"
 
-import { ExpenseContainer, ExpenseValueText, DescriptionText } from "./styles"
+import {
+  ExpenseContainer, ExpenseButton, ExpenseValueText, DescriptionText
+} from "./styles"
 import EditExpenseModal from "~/components/EditExpenseModal"
 
 import api from "~/services/api"
@@ -34,27 +36,38 @@ const Expense = ({
       text: loading ? <ActivityIndicator /> : "Delete",
       backgroundColor: "rgba(231, 76, 60, 1)",
       type: "delete",
-      onPress: handleDelete
+      onPress: () => Alert.alert("Confirmation", "Are you sure you want to delete this expense?", [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: handleDelete
+        }
+      ])
     }
   ]
 
   return (
     <>
       <Swipeout right={swipeoutBtns}>
-        <ExpenseContainer
-          onPress={() => setShowModal(true)}
-          color={type === "positive" ? "rgba(144, 198, 149, .7)" : "rgba(231, 76, 60, .7)"}
-        >
-          <ExpenseValueText
-            style={{
-              textShadowColor: "#585858",
-              textShadowOffset: { width: 2, height: 2 },
-              textShadowRadius: 0.2
-            }}
-          >
-            {`${type === "positive" ? "+" : "-"}${value}`}
-          </ExpenseValueText>
-          <DescriptionText>{description}</DescriptionText>
+        <ExpenseContainer>
+          <ExpenseButton onPress={() => setShowModal(true)}>
+            <ExpenseValueText
+              color={type === "positive" ? "rgba(144, 198, 149, .7)" : "rgba(231, 76, 60, .7)"}
+              style={{
+                textShadowColor: "#585858",
+                textShadowRadius: 0.1,
+                textShadowOffset: { width: 1, height: 1 }
+              }}
+            >
+              {`${type === "positive" ? "+" : "-"}${value}`}
+            </ExpenseValueText>
+
+            {description ? <DescriptionText>{description}</DescriptionText> : null}
+          </ExpenseButton>
         </ExpenseContainer>
       </Swipeout>
 

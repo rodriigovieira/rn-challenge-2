@@ -1,12 +1,11 @@
 import React from "react"
-import {
-  ActivityIndicator, ScrollView, View, RefreshControl, Text
-} from "react-native"
+import { View, Text, FlatList } from "react-native"
 
 import Expense from "~/components/Expense"
 
 import api from "~/services/api"
 
+// eslint-disable-next-line react/prop-types
 const ExpensesList = ({ navigation }) => {
   const [data, setData] = React.useState([])
   const [loading, setLoading] = React.useState(false)
@@ -41,29 +40,38 @@ const ExpensesList = ({ navigation }) => {
 
   React.useEffect(() => {
     handleRefresh()
+  }, [])
+
+  React.useEffect(() => {
+    handleRefresh()
   }, [created])
 
-  if (loading) {
-    return (
-      <View style={{ marginTop: 15 }}>
-        <ActivityIndicator size="large" color="darkgreen" />
-      </View>
-    )
-  }
-
   return (
-    <ScrollView style={{ width: "100%" }}>
-      <>
-        <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
-        {data.length > 0 ? (
-          data.map(expense => (
-            <Expense handleRefresh={handleRefresh} key={expense.id} expense={{ ...expense }} />
-          ))
-        ) : (
-          <Text>No expense available.</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "lightgray",
+        border: "0 solid black",
+        borderTopWidth: 0.5,
+        borderBottomWidth: 0.5
+      }}
+    >
+      <FlatList
+        style={{ width: "100%" }}
+        data={data}
+        onRefresh={handleRefresh}
+        refreshing={loading}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <Expense key={item.id} handleRefresh={handleRefresh} expense={{ ...item }} />
         )}
-      </>
-    </ScrollView>
+        ListEmptyComponent={(
+          <View style={{ alignItems: "center", justifyContent: "center", marginTop: 20 }}>
+            <Text>No expenses avaibale.</Text>
+          </View>
+)}
+      />
+    </View>
   )
 }
 

@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components/native"
 
 const Container = styled.View`
   align-items: center;
@@ -7,8 +7,8 @@ const Container = styled.View`
 const ContentContainer = styled.View`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9);
-  height: 475px;
   border-radius: 8px;
+  height: 100%;
   border: 1px solid rgba(0, 0, 0, 1);
 `
 
@@ -95,6 +95,7 @@ const ConfirmButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   background-color: ${props => props.color};
+  margin-bottom: 10px;
 `
 
 const ConfirmButtonText = styled.Text`
@@ -114,7 +115,9 @@ export const DescriptionContainer = styled.View`
 `
 
 export const DescriptionTextInput = styled.TextInput`
+  text-align: center;
   font-size: 22px;
+  width: 100%;
 `
 
 export {

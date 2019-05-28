@@ -29,7 +29,8 @@ const EditExpenseModal = ({
   },
   modal,
   onBackdropPress,
-  handleRefresh
+  handleRefresh,
+  setShowModal
 }) => {
   const [showPlusColor, setShowPlusColor] = useState(propType === "positive")
   const [showMinusColor, setShowMinusColor] = useState(propType === "negative")
@@ -66,6 +67,7 @@ const EditExpenseModal = ({
       .patch(`/expenses/${id}.json`, JSON.stringify(object))
       .then(() => {
         setLoading(false)
+        setShowModal(false)
         handleRefresh()
       })
       .catch(() => setLoading(false))
@@ -138,7 +140,8 @@ EditExpenseModal.propTypes = {
     type: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired
   }).isRequired,
-  handleRefresh: PropTypes.func.isRequired
+  handleRefresh: PropTypes.func.isRequired,
+  setShowModal: PropTypes.func.isRequired
 }
 
 export default EditExpenseModal

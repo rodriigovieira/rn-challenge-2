@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components/native"
 
 const Container = styled.View`
   align-items: center;
@@ -10,6 +10,7 @@ const ContentContainer = styled.View`
   min-height: 400px;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 1);
+  margin-bottom: 100px;
 `
 
 const ModalTitle = styled.View`
@@ -118,6 +119,8 @@ export const DescriptionContainer = styled.View`
 `
 
 export const DescriptionTextInput = styled.TextInput`
+  width: 100%;
+  text-align: center;
   font-size: 22px;
 `
 

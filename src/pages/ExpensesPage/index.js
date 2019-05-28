@@ -1,20 +1,14 @@
 import React from "react"
 
 import ExpensesList from "~/components/ExpensesList"
+import Header from "~/components/Header"
 
-import {
-  Container, StatusBar, StatusBarText, DrawerButton, DrawerButtonText
-} from "./styles"
+import { Container } from "./styles"
 
+// eslint-disable-next-line react/prop-types
 const ExpensesPage = ({ navigation }) => (
   <Container>
-    <StatusBar>
-      <DrawerButton onPress={() => navigation.openDrawer()}>
-        <DrawerButtonText>X</DrawerButtonText>
-      </DrawerButton>
-
-      <StatusBarText>Expenses Page</StatusBarText>
-    </StatusBar>
+    <Header title="Expenses Page" navigation={navigation} hideFilter={false} />
 
     <ExpensesList navigation={navigation} />
   </Container>

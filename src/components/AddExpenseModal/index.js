@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Modal from "react-native-modal"
 import PropTypes from "prop-types"
-import { ActivityIndicator } from "react-native"
+import { ActivityIndicator, TouchableWithoutFeedback, Keyboard } from "react-native"
 
 import {
   Container,
@@ -57,50 +57,52 @@ const AddExpenseModal = ({
   return (
     <Container>
       <Modal onBackdropPress={onBackdropPress} isVisible={modal}>
-        <ContentContainer>
-          <ModalTitle>
-            <ModalTitleText>Create Expense</ModalTitleText>
-          </ModalTitle>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ContentContainer>
+            <ModalTitle>
+              <ModalTitleText>Create Expense</ModalTitleText>
+            </ModalTitle>
 
-          <ExpenseTypeContainer>
-            <ExpensesTextContainer>
-              <ExpenseTypeText>Type:</ExpenseTypeText>
-            </ExpensesTextContainer>
+            <ExpenseTypeContainer>
+              <ExpensesTextContainer>
+                <ExpenseTypeText>Type:</ExpenseTypeText>
+              </ExpensesTextContainer>
 
-            <ButtonsContainer>
-              <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
-                <OperatorButtonText>+</OperatorButtonText>
-              </OperatorButton>
+              <ButtonsContainer>
+                <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
+                  <OperatorButtonText>+</OperatorButtonText>
+                </OperatorButton>
 
-              <Divider />
+                <Divider />
 
-              <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
-                <OperatorButtonText>-</OperatorButtonText>
-              </OperatorButton>
-            </ButtonsContainer>
-          </ExpenseTypeContainer>
+                <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
+                  <OperatorButtonText>-</OperatorButtonText>
+                </OperatorButton>
+              </ButtonsContainer>
+            </ExpenseTypeContainer>
 
-          <DescriptionContainer color={color}>
-            <DescriptionTextInput
-              value={description}
-              placeholder="Description goes here"
-              onChangeText={setDescription}
-              multiline
-            />
-          </DescriptionContainer>
+            <DescriptionContainer color={color}>
+              <DescriptionTextInput
+                value={description}
+                placeholder="Description goes here"
+                onChangeText={setDescription}
+                multiline
+              />
+            </DescriptionContainer>
 
-          <ValueContainer isAdding={showPlusColor}>
-            <ValueText color={color}>{`$${value}`}</ValueText>
-          </ValueContainer>
+            <ValueContainer isAdding={showPlusColor}>
+              <ValueText color={color}>{`$${value}`}</ValueText>
+            </ValueContainer>
 
-          <ConfirmButton color={color} onPress={handleSubmit}>
-            {loading ? (
-              <ActivityIndicator size="large" color="black" />
-            ) : (
-              <ConfirmButtonText>CONFIRM</ConfirmButtonText>
-            )}
-          </ConfirmButton>
-        </ContentContainer>
+            <ConfirmButton color={color} onPress={handleSubmit}>
+              {loading ? (
+                <ActivityIndicator size="large" color="black" />
+              ) : (
+                <ConfirmButtonText>CONFIRM</ConfirmButtonText>
+              )}
+            </ConfirmButton>
+          </ContentContainer>
+        </TouchableWithoutFeedback>
       </Modal>
     </Container>
   )

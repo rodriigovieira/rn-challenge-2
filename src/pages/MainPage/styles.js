@@ -1,45 +1,15 @@
-import styled from "styled-components"
-import { getStatusBarHeight } from "react-native-status-bar-height"
-
-const height = getStatusBarHeight()
+import styled from "styled-components/native"
 
 export const Container = styled.View`
   align-items: center;
   flex: 1;
 `
 
-export const StatusBar = styled.View`
-  border: 0 solid black;
-  width: 100%;
-  height: ${44 + height};
-  padding-top: ${height};
-  border-bottom-width: 0.4;
-  justify-content: space-between;
-  flex-direction: row;
-  align-items: center;
-`
-
-export const StatusBarText = styled.Text`
-  margin: 0 auto;
-  font-size: 18px;
-  font-weight: bold;
-`
-
-export const DrawerButton = styled.TouchableOpacity`
-  margin: auto 0;
-  margin-left: 10px;
-  align-self: flex-start;
-`
-
-export const DrawerButtonText = styled.Text`
-  font-size: 18px;
-  color: blue;
-`
-
 export const BigTextContainer = styled.View`
-  margin: ${props => (props.showError ? "72px 0" : "80px 0")};
+  padding: ${props => (props.showError ? "72px 0" : "80px 0")};
   text-align: center;
   align-items: center;
+  width: 100%;
 `
 
 export const BigTextDisplay = styled.Text`

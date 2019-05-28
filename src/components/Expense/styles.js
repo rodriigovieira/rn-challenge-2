@@ -1,20 +1,27 @@
-import styled from "styled-components"
+import styled from "styled-components/native"
 
-export const ExpenseContainer = styled.TouchableOpacity`
-  height: 90px;
+export const ExpenseContainer = styled.View`
+  background-color: lightgray;
+  align-items: center;
+  justify-content: center;
+`
+
+export const ExpenseButton = styled.TouchableOpacity`
+min-height: 80px;
+  padding: 10px;
   width: 100%;
   justify-content: space-around;
   align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.7);
-  box-shadow: 1px 0.4px 0.4px rgba(0, 0, 0, 0.4);
-  background-color: ${props => props.color};
-  padding: 10px;
+  border: 0 solid black;
+  border-top-width: .5px;
+  border-bottom-width: 1px;
+  background-color: white;
 `
 
 export const ExpenseValueText = styled.Text`
+  color: ${props => props.color};
   font-size: 24px;
   font-weight: bold;
-  color: white;
 `
 
 export const DescriptionText = styled.Text`
