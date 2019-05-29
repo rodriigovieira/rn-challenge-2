@@ -18,7 +18,7 @@
     "graphql": "^14.3.1",
     "graphql-tag": "^2.10.1",
     "prop-types": "^15.7.2",
-    "react": "16.8.3",
+    "react": "^16.8.6",
     "react-apollo": "^2.5.6",
     "react-native": "0.59.8",
     "react-native-gesture-handler": "^1.2.1",
@@ -28,10 +28,10 @@
     "react-native-swipeout": "^2.3.6",
     "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.11.0",
-    "reactotron-react-native": "^3.5.2",
     "styled-components": "^4.2.0"
   },
   "devDependencies": {
+    "reactotron-react-native": "^3.5.2",
     "@babel/core": "^7.4.5",
     "@babel/runtime": "^7.4.5",
     "babel-eslint": "^10.0.1",
@@ -46,7 +46,7 @@
     "eslint-plugin-react-native": "^3.7.0",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "^0.54.1",
-    "react-test-renderer": "16.8.3"
+    "react-test-renderer": "^16.8.6"
   },
   "jest": {
     "preset": "react-native"

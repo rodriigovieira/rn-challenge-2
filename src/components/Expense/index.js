@@ -90,7 +90,7 @@ const Expense = ({
 Expense.propTypes = {
   expense: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired
   }).isRequired,

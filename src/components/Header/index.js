@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from "react-native-vector-icons/FontAwesome"
+import AssyncStorage from "@react-native-community/async-storage"
 
 import {
   StatusBar, StatusBarText, DrawerButton, DrawerButtonText
@@ -15,8 +16,17 @@ const Header = ({ navigation, hideFilter, title }) => (
 
     <StatusBarText>{title}</StatusBarText>
 
-    <DrawerButton onPress={!hideFilter ? () => navigation.openDrawer() : () => {}}>
-      <DrawerButtonText hideFilter={hideFilter}>Filter</DrawerButtonText>
+    <DrawerButton
+      onPress={
+        !hideFilter
+          ? () => {
+            AssyncStorage.removeItem("@token")
+            navigation.navigate("WelcomePage")
+          }
+          : () => {}
+      }
+    >
+      <DrawerButtonText hideFilter={hideFilter}>Logout</DrawerButtonText>
     </DrawerButton>
   </StatusBar>
 )

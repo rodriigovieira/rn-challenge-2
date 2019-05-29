@@ -1,5 +1,5 @@
 import React from "react"
-import AssyncStorage from "@react-native-community/async-storage"
+import AsyncStorage from "@react-native-community/async-storage"
 import { ApolloProvider } from "react-apollo"
 import { View, ActivityIndicator, StyleSheet } from "react-native"
 
@@ -8,8 +8,6 @@ import "~/config/ReactotronConfig"
 import client from "~/utils/apolloClient"
 
 import createNavigator from "~/routes"
-
-AssyncStorage.clear()
 
 const styles = StyleSheet.create({
   container: {
@@ -24,7 +22,7 @@ const App = () => {
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
-    AssyncStorage.getItem("@token")
+    AsyncStorage.getItem("@token")
       .then((token) => {
         if (!token) {
           setLoading(false)
@@ -32,8 +30,9 @@ const App = () => {
           return
         }
 
-        AssyncStorage.setItem("@token", token)
+        AsyncStorage.setItem("@token", token)
         setUserLogged(true)
+        setLoading(false)
       })
       .catch(() => setLoading(false))
   }, [])

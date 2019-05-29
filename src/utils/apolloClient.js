@@ -9,8 +9,8 @@ const httpLink = createHttpLink({
   uri: "https://rn-expenses-backend.herokuapp.com/graphql"
 })
 
-const authMid = setContext((_, { headers }) => {
-  const token = AsyncStorage.getItem("@token")
+const authMid = setContext(async (_, { headers }) => {
+  const token = await AsyncStorage.getItem("@token")
 
   // Set HEADERS to have authorization token
   return {

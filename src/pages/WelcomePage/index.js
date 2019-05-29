@@ -1,13 +1,17 @@
 import React from "react"
 import AssyncStorage from "@react-native-community/async-storage"
 import gql from "graphql-tag"
+import PropTypes from "prop-types"
+
 import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
   View,
   StyleSheet,
-  Text
+  Text,
+  Linking,
+  Platform
 } from "react-native"
 import { Mutation } from "react-apollo"
 
@@ -21,11 +25,11 @@ import {
   LoginButtonContainer,
   LoginButton,
   LoginButtonText,
-  ActionsContainer
-  // RecoverPasswordButton,
-  // RecoverPasswordText,
-  // SignUpButton,
-  // SignUpText
+  ActionsContainer,
+  RecoverPasswordButton,
+  RecoverPasswordText,
+  SignUpButton,
+  SignUpText
 } from "./styles"
 
 const styles = StyleSheet.create({
@@ -45,15 +49,47 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "red",
     fontSize: 14
+  },
+
+  successText: {
+    textAlign: "center",
+    color: "blue",
+    fontSize: 14
   }
 })
 
+AssyncStorage.clear()
+
 const Welcome = ({ navigation }) => {
+  const navigate = (url) => {
+    if (url.includes("recover")) {
+      const token = url.replace("expenses-rn-app://recover/", "")
+
+      navigation.navigate("NewPasswordPage", { token })
+    }
+  }
+
+  const handleOpenURL = (event) => {
+    navigate(event.url)
+  }
+
+  React.useEffect(() => {
+    if (Platform.OS === "android") {
+      Linking.getInitialURL().then((url) => {
+        this.navigate(url)
+      })
+    } else {
+      Linking.addEventListener("url", handleOpenURL)
+    }
+  }, [])
+
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
 
   const [errorPassword, setErrorPassword] = React.useState(false)
   const [errorEmpty, setErrorEmpty] = React.useState(false)
+
+  const passwordChanged = navigation.getParam("passwordChanged")
 
   const handleLogin = (loginFunction) => {
     setErrorPassword(false)
@@ -78,7 +114,7 @@ const Welcome = ({ navigation }) => {
           .then(() => navigation.navigate("User"))
           .catch(() => setErrorPassword(true))
       })
-      .catch(e => setErrorPassword(true))
+      .catch(() => setErrorPassword(true))
   }
 
   return (
@@ -94,7 +130,7 @@ const Welcome = ({ navigation }) => {
         }
       `}
     >
-      {(loginFunction, { err, loading }) => {
+      {(loginFunction, { loading }) => {
         if (loading) {
           return (
             <View style={styles.container}>
@@ -122,6 +158,12 @@ const Welcome = ({ navigation }) => {
                 </View>
               )}
 
+              {passwordChanged && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.successText}>Your password was changed successfully..</Text>
+                </View>
+              )}
+
               <LoginFormContainer>
                 <UsernameInput
                   autoCapitalize="none"
@@ -145,13 +187,13 @@ const Welcome = ({ navigation }) => {
               </LoginButtonContainer>
 
               <ActionsContainer>
-                {/* <RecoverPasswordButton>
-          <RecoverPasswordText>Recover Password</RecoverPasswordText>
-          </RecoverPasswordButton>
+                <RecoverPasswordButton onPress={() => navigation.navigate("RecoverPage")}>
+                  <RecoverPasswordText>Recover Password</RecoverPasswordText>
+                </RecoverPasswordButton>
 
-          <SignUpButton>
-          <SignUpText>No account? Sign up!</SignUpText>
-        </SignUpButton> */}
+                <SignUpButton onPress={() => navigation.navigate("SignUpPage")}>
+                  <SignUpText>No account? Sign up!</SignUpText>
+                </SignUpButton>
               </ActionsContainer>
             </Container>
           </TouchableWithoutFeedback>
@@ -159,6 +201,12 @@ const Welcome = ({ navigation }) => {
       }}
     </Mutation>
   )
+}
+
+Welcome.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
 }
 
 export default Welcome

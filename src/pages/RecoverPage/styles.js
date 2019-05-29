@@ -12,16 +12,16 @@ export const TitleContainer = styled.View`
 `
 
 export const TitleText = styled.Text`
-  font-size: 48px;
+  font-size: 34px;
   font-weight: bold;
 `
 
-export const LoginFormContainer = styled.View`
+export const RecoverFormContainer = styled.View`
   width: 100%;
   align-items: center;
 `
 
-export const UsernameInput = styled.TextInput`
+export const EmailInput = styled.TextInput`
   width: 80%;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -31,22 +31,20 @@ export const UsernameInput = styled.TextInput`
   margin: 5px;
 `
 
-export const PasswordInput = styled(UsernameInput)``
-
-export const LoginButtonContainer = styled.View`
+export const RecoverButtonContainer = styled.View`
   margin: 10px;
   width: 100%;
   align-items: center;
 `
 
-export const LoginButton = styled.TouchableOpacity`
+export const RecoverButton = styled.TouchableOpacity`
   border-radius: 5px;
   background: lightskyblue;
   width: 80%;
   padding: 10px 7px;
 `
 
-export const LoginButtonText = styled.Text`
+export const RecoverButtonText = styled.Text`
   color: white;
   font-size: 18px;
   text-align: center;
@@ -55,20 +53,16 @@ export const LoginButtonText = styled.Text`
 
 export const ActionsContainer = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   width: 80%;
 `
 
-export const RecoverPasswordButton = styled.TouchableOpacity`
+export const ReturnHomePageButton = styled.TouchableOpacity`
   margin-left: 10%;
   margin: 5px;
 `
 
-export const RecoverPasswordText = styled.Text`
+export const ReturnHomePageButtonText = styled.Text`
   color: lightskyblue;
   font-size: 14px;
 `
-
-export const SignUpButton = styled(RecoverPasswordButton)``
-
-export const SignUpText = styled(RecoverPasswordText)``
