@@ -5,12 +5,11 @@ const Container = styled.View`
 `
 
 const ContentContainer = styled.View`
+  justify-content: flex-start;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9);
-  min-height: 400px;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 1);
-  margin-bottom: 100px;
 `
 
 const ModalTitle = styled.View`
@@ -32,7 +31,7 @@ const ExpenseTypeContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  flex: 1;
+  height: 20%;
 `
 
 const ExpensesTextContainer = styled.View`
@@ -50,6 +49,7 @@ const ButtonsContainer = styled.View`
   border-radius: 15px;
   flex-direction: row;
   overflow: hidden;
+  height: 75%;
 `
 
 const OperatorButton = styled.TouchableOpacity`
@@ -77,29 +77,15 @@ const Divider = styled.View`
   background-color: rgba(0, 0, 0, 0.8);
 `
 
-const ValueContainer = styled.View`
-  margin-top: 60px;
-  text-align: center;
-  transform: ${props => (props.isAdding ? "rotate(30deg)" : "rotate(-30deg)")};
-  border-radius: 100px;
-  margin-bottom: 100px;
-`
-
-const ValueText = styled.Text`
-  font-size: 30px;
-  font-weight: bold;
-  color: ${props => props.color};
-  border: 0.3px dashed ${props => props.color};
-`
-
 const ConfirmButton = styled.TouchableOpacity`
+  margin-top: auto;
   border-radius: 5px;
   width: 90%;
   padding: 10px;
   align-items: center;
   justify-content: center;
   background-color: ${props => props.color};
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 `
 
 const ConfirmButtonText = styled.Text`
@@ -109,7 +95,7 @@ const ConfirmButtonText = styled.Text`
 `
 
 export const DescriptionContainer = styled.View`
-  margin: 20px;
+  margin: 10px;
   width: 90%;
   align-items: center;
   justify-content: center;
@@ -144,8 +130,6 @@ export {
   OperatorButton,
   OperatorButtonText,
   Divider,
-  ValueContainer,
-  ValueText,
   ConfirmButton,
   ConfirmButtonText
 }

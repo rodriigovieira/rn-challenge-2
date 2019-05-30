@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Modal from "react-native-modal"
 import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures"
 
 import {
@@ -21,19 +22,15 @@ import {
 import AddExpenseModal from "~/components/AddExpenseModal"
 import Header from "~/components/Header"
 
-import api from "~/services/api"
-
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "00", "."]
 
 // eslint-disable-next-line
 const MainPage = ({ navigation }) => {
   const [bigText, setBigText] = useState("")
-  const [description, setDescription] = useState("")
   const [operator, setOperator] = useState("+")
 
   const [showModal, setShowModal] = useState(false)
   const [showError, setShowError] = useState(false)
-  const [loading, setLoading] = React.useState(false)
 
   const handleNumberPress = (number) => {
     if ((number === "0" || number === "00" || number === ".") && !bigText) return
@@ -57,30 +54,6 @@ const MainPage = ({ navigation }) => {
     }
 
     setShowModal(true)
-  }
-
-  const handleSubmit = () => {
-    setLoading(true)
-
-    const object = {
-      type: operator === "+" ? "positive" : "negative",
-      value: bigText,
-      description
-    }
-
-    api
-      .post("/expenses/.json", JSON.stringify(object))
-      .then(() => {
-        setLoading(false)
-        setShowModal(false)
-        setBigText("")
-        setDescription("")
-
-        navigation.navigate("ExpensesPage", {
-          created: Math.random()
-        })
-      })
-      .catch(() => setLoading(false))
   }
 
   const onSwipe = (gestureName) => {
@@ -138,16 +111,14 @@ const MainPage = ({ navigation }) => {
         </ConfirmButtonContainer>
       </ButtonsContainer>
 
-      <AddExpenseModal
-        onBackdropPress={() => setShowModal(false)}
-        modal={showModal}
-        value={bigText}
-        isAdding={operator === "+"}
-        handleSubmit={handleSubmit}
-        loading={loading}
-        setDescription={setDescription}
-        description={description}
-      />
+      <Modal onBackdropPress={() => setShowModal(false)} isVisible={showModal}>
+        <AddExpenseModal
+          value={bigText}
+          isAdding={operator === "+"}
+          navigation={navigation}
+          setModal={setShowModal}
+        />
+      </Modal>
     </Container>
   )
 }

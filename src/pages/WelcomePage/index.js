@@ -58,8 +58,6 @@ const styles = StyleSheet.create({
   }
 })
 
-AssyncStorage.clear()
-
 const Welcome = ({ navigation }) => {
   const navigate = (url) => {
     if (url.includes("recover")) {

@@ -1,14 +1,10 @@
 import styled from "styled-components/native"
 
-const Container = styled.View`
-  align-items: center;
-`
 
 const ContentContainer = styled.View`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
-  height: 100%;
   border: 1px solid rgba(0, 0, 0, 1);
 `
 
@@ -121,7 +117,6 @@ export const DescriptionTextInput = styled.TextInput`
 `
 
 export {
-  Container,
   ContentContainer,
   ModalTitle,
   ModalTitleText,

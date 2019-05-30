@@ -56,6 +56,7 @@ const RecoverPage = ({ navigation }) => {
   const [showMessage, setShowMessage] = React.useState(false)
   const [invalidError, setInvalidError] = React.useState(false)
   const [emptyError, setEmptyError] = React.useState(false)
+  const [matchError, setMatchError] = React.useState(false)
 
   const token = navigation.getParam("token")
 
@@ -94,8 +95,14 @@ const RecoverPage = ({ navigation }) => {
     setShowMessage(false)
     setInvalidError(false)
 
-    if (!password || !password) {
+    if (!password || !passwordConfirm) {
       setEmptyError(true)
+
+      return
+    }
+
+    if (password !== passwordConfirm) {
+      setMatchError(true)
 
       return
     }
@@ -143,6 +150,12 @@ const RecoverPage = ({ navigation }) => {
             {emptyError && (
               <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>You have to provide an email.</Text>
+              </View>
+            )}
+
+            {matchError && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>Your passwords do not match.</Text>
               </View>
             )}
 

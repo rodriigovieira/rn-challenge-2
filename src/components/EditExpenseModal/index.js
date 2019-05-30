@@ -1,8 +1,10 @@
 import React, { useState } from "react"
-import { ActivityIndicator } from "react-native"
+import { ActivityIndicator, View, StyleSheet } from "react-native"
+import { Mutation } from "react-apollo"
 import Modal from "react-native-modal"
 import PropTypes from "prop-types"
 
+import gql from "graphql-tag"
 import {
   Container,
   ContentContainer,
@@ -23,6 +25,32 @@ import {
 } from "./styles"
 import api from "~/services/api"
 
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1
+  },
+
+  errorContainer: {
+    marginBottom: 30,
+    marginTop: -10,
+    alignItems: "center"
+  },
+
+  errorText: {
+    textAlign: "center",
+    color: "red",
+    fontSize: 14
+  },
+
+  successText: {
+    textAlign: "center",
+    color: "blue",
+    fontSize: 14
+  }
+})
+
 const EditExpenseModal = ({
   expense: {
     value: propValue, description: propDescription, id, type: propType
@@ -30,13 +58,14 @@ const EditExpenseModal = ({
   modal,
   onBackdropPress,
   handleRefresh,
-  setShowModal
+  setShowModal,
+  refetch
 }) => {
-  const [showPlusColor, setShowPlusColor] = useState(propType === "positive")
-  const [showMinusColor, setShowMinusColor] = useState(propType === "negative")
-  const [loading, setLoading] = useState(false)
+  const [showPlusColor, setShowPlusColor] = useState(propType === "POSITIVE")
+  const [showMinusColor, setShowMinusColor] = useState(propType === "NEGATIVE")
 
   const [description, setDescription] = useState(propDescription)
+  const [name, setName] = useState("")
   const [value, setValue] = useState(propValue)
   const [type, setType] = useState(propType)
 
@@ -45,89 +74,123 @@ const EditExpenseModal = ({
   const handlePlusClick = () => {
     setShowPlusColor(true)
     setShowMinusColor(false)
-    setType("positive")
+    setType("POSITIVE")
   }
 
   const handleMinusClick = () => {
     setShowPlusColor(false)
     setShowMinusColor(true)
-    setType("negative")
+    setType("NEGATIVE")
   }
 
-  const handleSubmit = () => {
-    setLoading(true)
-
-    const object = {
-      value,
-      description,
-      type
-    }
-
-    api
-      .patch(`/expenses/${id}.json`, JSON.stringify(object))
+  const handleSubmit = (updateFunction) => {
+    updateFunction({
+      variables: {
+        description,
+        value: parseFloat(value),
+        type,
+        name,
+        id
+      }
+    })
       .then(() => {
-        setLoading(false)
         setShowModal(false)
-        handleRefresh()
+
+        refetch()
       })
-      .catch(() => setLoading(false))
+      .catch(() => refetch())
   }
 
   return (
-    <Container>
-      <Modal onBackdropPress={onBackdropPress} isVisible={modal}>
-        <ContentContainer>
-          <ModalTitle>
-            <ModalTitleText>Edit Expense</ModalTitleText>
-          </ModalTitle>
+    <Mutation
+      mutation={gql`
+        mutation UPDATE_EXPENSE(
+          $description: String!
+          $value: Float!
+          $type: ExpenseType!
+          $name: String!
+          $id: ID!
+        ) {
+          updateExpense(
+            data: { description: $description, value: $value, type: $type, name: $name },
+            id: $id
+          ) {
+            id
+          }
+        }
+      `}
+    >
+      {(updateFunction, { loading, error }) => {
+        if (loading) {
+          return (
+            <View style={styles.container}>
+              <ActivityIndicator size="large" />
+            </View>
+          )
+        }
 
-          <ExpenseTypeContainer>
-            <ExpensesTextContainer>
-              <ExpenseTypeText>Type:</ExpenseTypeText>
-            </ExpensesTextContainer>
+        return (
+          <Container>
+            <Modal onBackdropPress={onBackdropPress} isVisible={modal}>
+              <ContentContainer>
+                <ModalTitle>
+                  <ModalTitleText>Edit Expense</ModalTitleText>
+                </ModalTitle>
 
-            <ButtonsContainer>
-              <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
-                <OperatorButtonText>+</OperatorButtonText>
-              </OperatorButton>
+                <ExpenseTypeContainer>
+                  <ExpensesTextContainer>
+                    <ExpenseTypeText>Type:</ExpenseTypeText>
+                  </ExpensesTextContainer>
 
-              <Divider />
+                  <ButtonsContainer>
+                    <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
+                      <OperatorButtonText>+</OperatorButtonText>
+                    </OperatorButton>
 
-              <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
-                <OperatorButtonText>-</OperatorButtonText>
-              </OperatorButton>
-            </ButtonsContainer>
-          </ExpenseTypeContainer>
+                    <Divider />
 
-          <ExpenseTypeContainer>
-            <ExpensesTextContainer>
-              <ExpenseTypeText>Value:</ExpenseTypeText>
-            </ExpensesTextContainer>
+                    <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
+                      <OperatorButtonText>-</OperatorButtonText>
+                    </OperatorButton>
+                  </ButtonsContainer>
+                </ExpenseTypeContainer>
 
-            <ExpenseValueTextInput keyboardType="numeric" onChangeText={setValue} color={color}>
-              {value}
-            </ExpenseValueTextInput>
-          </ExpenseTypeContainer>
+                <ExpenseTypeContainer>
+                  <ExpensesTextContainer>
+                    <ExpenseTypeText>Value:</ExpenseTypeText>
+                  </ExpensesTextContainer>
 
-          <DescriptionContainer color={color}>
-            <DescriptionTextInput
-              value={description}
-              placeholder="Description goes here"
-              onChangeText={setDescription}
-              multiline
-            />
-          </DescriptionContainer>
+                  <ExpenseValueTextInput
+                    keyboardType="numeric"
+                    onChangeText={setValue}
+                    color={color}
+                  >
+                    {value}
+                  </ExpenseValueTextInput>
+                </ExpenseTypeContainer>
 
-          <ConfirmButton color={color} onPress={handleSubmit}>
-            {loading ? (
-              <ActivityIndicator size="large" color="black" />
-            ) : (
-              <ConfirmButtonText>CONFIRM</ConfirmButtonText>
-            )}
-          </ConfirmButton>
-        </ContentContainer>
-      </Modal>
-    </Container>
+                <DescriptionContainer color={color}>
+                  <DescriptionTextInput
+                    value={description}
+                    placeholder="Description goes here"
+                    onChangeText={setDescription}
+                    multiline
+                  />
+                </DescriptionContainer>
+
+                <ConfirmButton color={color} onPress={() => handleSubmit(updateFunction)}>
+                  {loading ? (
+                    <ActivityIndicator size="large" color="black" />
+                  ) : (
+                    <ConfirmButtonText>CONFIRM</ConfirmButtonText>
+                  )}
+                </ConfirmButton>
+              </ContentContainer>
+            </Modal>
+          </Container>
+        )
+      }}
+    </Mutation>
   )
 }
 
@@ -135,7 +198,7 @@ EditExpenseModal.propTypes = {
   modal: PropTypes.bool.isRequired,
   onBackdropPress: PropTypes.func.isRequired,
   expense: PropTypes.shape({
-    value: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired
