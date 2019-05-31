@@ -7,7 +7,6 @@ import {
   StatusBar, StatusBarText, DrawerButton, DrawerButtonText
 } from "./styles"
 
-// eslint-disable-next-line react/prop-types
 const Header = ({ navigation, hideFilter, title }) => (
   <StatusBar>
     <DrawerButton onPress={() => navigation.openDrawer()}>
@@ -32,8 +31,15 @@ const Header = ({ navigation, hideFilter, title }) => (
 )
 
 Header.propTypes = {
-  hideFilter: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired
+  hideFilter: PropTypes.bool,
+  title: PropTypes.string.isRequired,
+  navigation: PropTypes.shape({
+    openDrawer: PropTypes.func.isRequired
+  }).isRequired
+}
+
+Header.defaultProps = {
+  hideFilter: false
 }
 
 export default Header

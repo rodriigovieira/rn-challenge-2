@@ -85,6 +85,10 @@ const Expense = ({
         mutation DELETE_EXPENSE($id: ID!) {
           deleteExpense(id: $id) {
             id
+            value
+            name
+            type
+            description
           }
         }
       `}

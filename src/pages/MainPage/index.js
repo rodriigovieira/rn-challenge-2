@@ -1,6 +1,8 @@
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import Modal from "react-native-modal"
 import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures"
+import { Icon } from "react-native"
 
 import {
   Container,
@@ -24,7 +26,6 @@ import Header from "~/components/Header"
 
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "00", "."]
 
-// eslint-disable-next-line
 const MainPage = ({ navigation }) => {
   const [bigText, setBigText] = useState("")
   const [operator, setOperator] = useState("+")
@@ -121,6 +122,12 @@ const MainPage = ({ navigation }) => {
       </Modal>
     </Container>
   )
+}
+
+MainPage.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
 }
 
 export default MainPage

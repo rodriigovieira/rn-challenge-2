@@ -87,13 +87,11 @@ const SignUpPage = ({ navigation }) => {
         password,
         name: name.trim()
       }
-    })
-      .then(async ({ data: { createUser: { token } } }) => {
-        await AsyncStorage.setItem("@token", token)
+    }).then(async ({ data: { createUser: { token } } }) => {
+      await AsyncStorage.setItem("@token", token)
 
-        navigation.navigate("User")
-      })
-      .catch(e => console.trom(e))
+      navigation.navigate("User")
+    })
   }
 
   return (

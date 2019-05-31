@@ -2,6 +2,9 @@ import React from "react"
 import AsyncStorage from "@react-native-community/async-storage"
 import { ApolloProvider } from "react-apollo"
 import { View, ActivityIndicator, StyleSheet } from "react-native"
+import { ThemeProvider } from "styled-components"
+
+import theme from "~/styles"
 
 import "~/config/ReactotronConfig"
 
@@ -49,7 +52,9 @@ const App = () => {
 
   return (
     <ApolloProvider client={client}>
-      <Routes />
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
     </ApolloProvider>
   )
 }

@@ -92,13 +92,7 @@ const EditExpenseModal = ({
         name,
         id
       }
-    })
-      .then(() => {
-        setShowModal(false)
-
-        refetch()
-      })
-      .catch(() => refetch())
+    }).then(() => setShowModal(false))
   }
 
   return (
@@ -112,10 +106,14 @@ const EditExpenseModal = ({
           $id: ID!
         ) {
           updateExpense(
-            data: { description: $description, value: $value, type: $type, name: $name },
+            data: { description: $description, value: $value, type: $type, name: $name }
             id: $id
           ) {
             id
+            value
+            description
+            type
+            name
           }
         }
       `}
