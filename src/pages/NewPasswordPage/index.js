@@ -117,7 +117,7 @@ const RecoverPage = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
       </View>
     )
   }
@@ -136,7 +136,7 @@ const RecoverPage = ({ navigation }) => {
         if (requestLoading) {
           return (
             <View style={styles.container}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
             </View>
           )
         }

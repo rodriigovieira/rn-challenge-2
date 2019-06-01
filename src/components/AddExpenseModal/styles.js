@@ -1,6 +1,5 @@
 import styled from "styled-components/native"
 
-
 const ContentContainer = styled.View`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9);
@@ -49,7 +48,7 @@ const OperatorButton = styled.TouchableOpacity`
   align-items: center;
   padding: 10px 25px;
   background-color: ${(props) => {
-    if (props.showPlusColor) return "rgba(170, 198, 149, 1)"
+    if (props.showPlusColor) return "rgba(120,156,70,1)"
     if (props.showMinusColor) return "rgba(231, 76, 60, 1)"
 
     return "white"
@@ -70,18 +69,15 @@ const Divider = styled.View`
 `
 
 const ValueContainer = styled.View`
-  margin-top: 60px;
   text-align: center;
-  transform: ${props => (props.isAdding ? "rotate(30deg)" : "rotate(-30deg)")};
-  border-radius: 100px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
+  margin-top: 10px;
 `
 
 const ValueText = styled.Text`
   font-size: 30px;
   font-weight: bold;
   color: ${props => props.color};
-  border: 0.3px dashed ${props => props.color};
 `
 
 const ConfirmButton = styled.TouchableOpacity`
@@ -92,6 +88,7 @@ const ConfirmButton = styled.TouchableOpacity`
   justify-content: center;
   background-color: ${props => props.color};
   margin-bottom: 10px;
+  margin-top: auto;
 `
 
 const ConfirmButtonText = styled.Text`
@@ -105,16 +102,18 @@ export const DescriptionContainer = styled.View`
   width: 90%;
   align-items: center;
   justify-content: center;
-  border: 0 solid ${props => props.color};
-  border-bottom-width: 1px;
   padding: 3px;
 `
 
 export const DescriptionTextInput = styled.TextInput`
-  text-align: center;
-  font-size: 22px;
+  font-size: 18px;
+  padding-top: 5px;
+  padding-bottom: 2px;
+  margin: 12px 0;
   width: 100%;
 `
+
+export const TitleTextInput = styled(DescriptionTextInput)``
 
 export {
   ContentContainer,

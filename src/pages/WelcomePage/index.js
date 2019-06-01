@@ -11,7 +11,8 @@ import {
   StyleSheet,
   Text,
   Linking,
-  Platform
+  Platform,
+  Animated
 } from "react-native"
 import { Mutation } from "react-apollo"
 
@@ -31,6 +32,8 @@ import {
   SignUpButton,
   SignUpText
 } from "./styles"
+
+import AnimatedInput from "~/components/AnimatedInput"
 
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +62,32 @@ const styles = StyleSheet.create({
 })
 
 const Welcome = ({ navigation }) => {
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+
+  const [animationLogin] = React.useState(new Animated.Value(email.length === 0 ? 0 : 1))
+  const [animationPassword] = React.useState(new Animated.Value(password.length === 0 ? 0 : 1))
+
+  const [errorPassword, setErrorPassword] = React.useState(false)
+  const [errorEmpty, setErrorEmpty] = React.useState(false)
+
+  const [isLoginActive, setIsLoginActive] = React.useState(false)
+  const [isPasswordActive, setIsPasswordActive] = React.useState(false)
+
+  const passwordChanged = navigation.getParam("passwordChanged")
+
+  React.useEffect(() => {
+    Animated.timing(animationLogin, {
+      toValue: isLoginActive || email.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationPassword, {
+      toValue: isPasswordActive || password.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+  })
+
   const navigate = (url) => {
     if (url.includes("recover")) {
       const token = url.replace("expenses-rn-app://recover/", "")
@@ -80,14 +109,6 @@ const Welcome = ({ navigation }) => {
       Linking.addEventListener("url", handleOpenURL)
     }
   }, [])
-
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
-
-  const [errorPassword, setErrorPassword] = React.useState(false)
-  const [errorEmpty, setErrorEmpty] = React.useState(false)
-
-  const passwordChanged = navigation.getParam("passwordChanged")
 
   const handleLogin = (loginFunction) => {
     setErrorPassword(false)
@@ -132,7 +153,7 @@ const Welcome = ({ navigation }) => {
         if (loading) {
           return (
             <View style={styles.container}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
             </View>
           )
         }
@@ -163,19 +184,36 @@ const Welcome = ({ navigation }) => {
               )}
 
               <LoginFormContainer>
-                <UsernameInput
-                  autoCapitalize="none"
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="Login"
-                />
+                <AnimatedInput textValue="Your email" animationStatus={animationLogin}>
+                  <UsernameInput
+                    autoFocus
+                    style={{
+                      borderBottomColor: isLoginActive ? "rgba(73, 110, 239, 1)" : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    onFocus={() => setIsLoginActive(true)}
+                    onBlur={() => setIsLoginActive(false)}
+                    autoCapitalize="none"
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                </AnimatedInput>
 
-                <PasswordInput
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  placeholder="Password"
-                />
+                <AnimatedInput textValue="Your password" animationStatus={animationPassword}>
+                  <PasswordInput
+                    style={{
+                      borderBottomColor: isPasswordActive
+                        ? "rgba(73, 110, 239, 1)"
+                        : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    onFocus={() => setIsPasswordActive(true)}
+                    onBlur={() => setIsPasswordActive(false)}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                  />
+                </AnimatedInput>
               </LoginFormContainer>
 
               <LoginButtonContainer>

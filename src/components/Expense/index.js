@@ -51,33 +51,7 @@ const Expense = ({
     deleteFunction({ variables: { id } })
       .then(() => refetch())
       .catch(() => refetch())
-    // api
-    //   .delete(`/expenses/${id}.json`)
-    //   .then(() => {
-    //     setLoading(false)
-    //     handleRefresh()
-    //   })
-    //   .catch(() => setLoading(false))
   }
-
-  // const swipeoutBtns = [
-  //   {
-  //     text: loading ? <ActivityIndicator /> : "Delete",
-  //     backgroundColor: "rgba(231, 76, 60, 1)",
-  //     type: "delete",
-  //     onPress: () => Alert.alert("Confirmation", "Are you sure you want to delete this expense?", [
-  //       {
-  //         text: "Cancel",
-  //         style: "cancel"
-  //       },
-  //       {
-  //         text: "Delete",
-  //         style: "destructive",
-  //         onPress: handleDelete
-  //       }
-  //     ])
-  //   }
-  // ]
 
   return (
     <Mutation

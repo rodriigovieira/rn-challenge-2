@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import { ScrollView, FlatList, SafeAreaView } from "react-native"
 
 import Icon from "react-native-vector-icons/FontAwesome"
@@ -10,8 +11,7 @@ import {
   ItemText,
   HeaderContainer,
   TextContainer,
-  UserNameText,
-  UserEmailText
+  UserNameText
 } from "./styles"
 
 const menuData = [
@@ -35,8 +35,14 @@ const menuData = [
   }
 ]
 
-const DrawerMenu = ({ activeItemKey, onItemPress }) => {
-  const [activeRoute, setActiveRoute] = React.useState(menuData[0].routeName)
+const DrawerMenu = ({ onItemPress, navigation }) => {
+  const activeItemKey = menuData[navigation.state.index].routeName
+
+  const [activeRoute, setActiveRoute] = React.useState(activeItemKey)
+
+  React.useEffect(() => {
+    setActiveRoute(activeItemKey)
+  }, [activeItemKey])
 
   return (
     <ScrollView>
@@ -53,7 +59,7 @@ const DrawerMenu = ({ activeItemKey, onItemPress }) => {
 
         <FlatList
           data={menuData}
-          extraData={activeItemKey}
+          extraData={activeRoute}
           renderItem={({ item: { name, routeName, iconName } }) => (
             <ItemButton
               isItemActive={activeRoute === routeName}
@@ -78,6 +84,10 @@ const DrawerMenu = ({ activeItemKey, onItemPress }) => {
       </SafeAreaView>
     </ScrollView>
   )
+}
+
+DrawerMenu.propTypes = {
+  onItemPress: PropTypes.func.isRequired
 }
 
 export default DrawerMenu

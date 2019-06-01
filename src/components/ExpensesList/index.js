@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
 // eslint-disable-next-line react/prop-types
 const ExpensesList = ({ navigation }) => (
   <Query
+    fetchPolicy="cache-and-network"
     query={gql`
       query {
         showUserExpenses {
@@ -36,7 +37,7 @@ const ExpensesList = ({ navigation }) => (
       if (loading) {
         return (
           <View style={styles.container}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
           </View>
         )
       }
@@ -75,7 +76,12 @@ const ExpensesList = ({ navigation }) => (
               </View>
 )}
             renderItem={({ item }) => (
-              <Expense refetch={refetch} key={item.id} handleRefresh={() => {}} expense={{ ...item }} />
+              <Expense
+                refetch={refetch}
+                key={item.id}
+                handleRefresh={() => {}}
+                expense={{ ...item }}
+              />
             )}
           />
         </View>

@@ -5,7 +5,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   StyleSheet,
-  View
+  View,
+  Animated,
+  Text
 } from "react-native"
 import { Mutation } from "react-apollo"
 
@@ -26,8 +28,11 @@ import {
   DescriptionContainer,
   DescriptionTextInput,
   ConfirmButton,
-  ConfirmButtonText
+  ConfirmButtonText,
+  TitleTextInput
 } from "./styles"
+
+import AnimatedInput from "~/components/AnimatedInput"
 
 const styles = StyleSheet.create({
   container: {
@@ -37,34 +42,57 @@ const styles = StyleSheet.create({
   },
 
   errorContainer: {
-    marginBottom: 30,
-    marginTop: -10,
+    marginBottom: 20,
     alignItems: "center"
   },
 
   errorText: {
     textAlign: "center",
-    color: "red",
-    fontSize: 14
-  },
-
-  successText: {
-    textAlign: "center",
-    color: "blue",
+    color: "rgba(196,0,2,1)",
     fontSize: 14
   }
 })
 
 const AddExpenseModal = ({
-  value, isAdding, navigation, setModal
+  value, isAdding, navigation, setModal, setBigText
 }) => {
   const [description, setDescription] = useState("")
-  const [name, setName] = useState("")
+  const [title, setTitle] = useState("")
 
   const [showPlusColor, setShowPlusColor] = useState(isAdding)
   const [showMinusColor, setShowMinusColor] = useState(!isAdding)
 
-  const color = showMinusColor ? "rgba(231, 76, 60, 1)" : "rgba(170, 198, 149, 1)"
+  const [errorEmpty, setErrorEmpty] = React.useState(false)
+
+  const [isTitleActive, setIsTitleActive] = React.useState(false)
+  const [isDescriptionActive, setIsDescriptionActive] = React.useState(false)
+
+  const [animationTitle] = React.useState(new Animated.Value(title.length === 0 ? 0 : 1))
+  const [animationDescription] = React.useState(
+    new Animated.Value(description.length === 0 ? 0 : 1)
+  )
+  const [animationValue] = React.useState(new Animated.Value(0))
+
+  const color = showMinusColor ? "rgba(231, 76, 60, 1)" : "rgba(120,156,70,1)"
+
+  React.useEffect(() => {
+    Animated.timing(animationTitle, {
+      toValue: isTitleActive || title.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationDescription, {
+      toValue: isDescriptionActive || description.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+  })
+
+  React.useEffect(() => {
+    Animated.timing(animationValue, {
+      toValue: showPlusColor ? 0 : 1,
+      duration: 400
+    }).start()
+  }, [showPlusColor, showMinusColor])
 
   React.useEffect(() => {
     setShowPlusColor(isAdding)
@@ -83,16 +111,23 @@ const AddExpenseModal = ({
   }
 
   const handleCreate = (createExpenseFunction) => {
+    if (!description || !title) {
+      setErrorEmpty(true)
+
+      return
+    }
+
     createExpenseFunction({
       variables: {
         value: parseFloat(value),
         description,
         type: isAdding ? "POSITIVE" : "NEGATIVE",
-        name
+        name: title
       }
     })
       .then(() => {
-        navigation.navigate("ExpensesPage", { created: true })
+        setBigText("")
+        navigation.navigate("ExpensesPage")
 
         setModal(false)
       })
@@ -120,7 +155,7 @@ const AddExpenseModal = ({
         if (loading) {
           return (
             <View style={styles.container}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
             </View>
           )
         }
@@ -151,27 +186,72 @@ const AddExpenseModal = ({
               </ExpenseTypeContainer>
 
               <DescriptionContainer color={color}>
-                <DescriptionTextInput
-                  value={name}
-                  placeholder="Title goes here"
-                  onChangeText={setName}
-                />
-
-                <DescriptionTextInput
-                  value={description}
-                  placeholder="Description goes here"
-                  onChangeText={setDescription}
-                  multiline
-                />
+                <AnimatedInput
+                  color={color}
+                  textValue="Expense Title"
+                  animationStatus={animationTitle}
+                  left="0%"
+                >
+                  <TitleTextInput
+                    onFocus={() => setIsTitleActive(true)}
+                    style={{
+                      borderBottomColor: isTitleActive ? color : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    onBlur={() => setIsTitleActive(false)}
+                    value={title}
+                    onChangeText={setTitle}
+                  />
+                </AnimatedInput>
+                <AnimatedInput
+                  textValue="Description goes here"
+                  color={color}
+                  animationStatus={animationDescription}
+                  left="0%"
+                >
+                  <DescriptionTextInput
+                    onFocus={() => setIsDescriptionActive(true)}
+                    style={{
+                      borderBottomColor: isDescriptionActive ? color : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    onBlur={() => setIsDescriptionActive(false)}
+                    value={description}
+                    onChangeText={setDescription}
+                    multiline
+                  />
+                </AnimatedInput>
               </DescriptionContainer>
 
+              {errorEmpty && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>ERROR! You need to fill all fields.</Text>
+                </View>
+              )}
+
               <ValueContainer isAdding={showPlusColor}>
-                <ValueText color={color}>{`$${value}`}</ValueText>
+                {/* <ValueText> */}
+                <Animated.Text
+                  style={{
+                    fontSize: animationValue.interpolate({
+                      inputRange: [0, 0.3, 0.7, 1],
+                      outputRange: [30, 18, 50, 30]
+                    }),
+                    fontWeight: "bold",
+                    color: animationValue.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ["rgba(120,156,70,1)", "rgba(231, 76, 60, 1)"]
+                    })
+                  }}
+                >
+                  {`$${value}`}
+                </Animated.Text>
+                {/* </ValueText> */}
               </ValueContainer>
 
               <ConfirmButton color={color} onPress={() => handleCreate(createExpenseFunction)}>
                 {loading ? (
-                  <ActivityIndicator size="large" color="black" />
+                  <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
                 ) : (
                   <ConfirmButtonText>CONFIRM</ConfirmButtonText>
                 )}

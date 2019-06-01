@@ -24,8 +24,6 @@ export const RecoverFormContainer = styled.View`
 export const EmailInput = styled.TextInput`
   width: 80%;
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid black;
   font-size: 16px;
   padding: 10px 7px;
   margin: 5px;
@@ -39,7 +37,7 @@ export const RecoverButtonContainer = styled.View`
 
 export const RecoverButton = styled.TouchableOpacity`
   border-radius: 5px;
-  background: lightskyblue;
+  background: ${props => props.theme.colors.primaryNormal};
   width: 80%;
   padding: 10px 7px;
 `
@@ -63,6 +61,6 @@ export const ReturnHomePageButton = styled.TouchableOpacity`
 `
 
 export const ReturnHomePageButtonText = styled.Text`
-  color: lightskyblue;
+  color: ${props => props.theme.colors.primaryNormal};
   font-size: 14px;
 `

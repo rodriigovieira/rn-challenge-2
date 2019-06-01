@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import Modal from "react-native-modal"
 import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures"
-import { Icon } from "react-native"
+import Icon from "react-native-vector-icons/FontAwesome5"
 
 import {
   Container,
@@ -57,17 +57,23 @@ const MainPage = ({ navigation }) => {
     setShowModal(true)
   }
 
+  const removeLastCharacter = () => {
+    let newString = bigText.slice(0, bigText.length - 1)
+
+    if (bigText.length === 1) newString = ""
+
+    setBigText(newString)
+  }
+
   const onSwipe = (gestureName) => {
     const { SWIPE_LEFT } = swipeDirections
 
-    const newString = bigText.slice(0, bigText.length - 1)
-
-    if (gestureName === SWIPE_LEFT) setBigText(newString)
+    if (gestureName === SWIPE_LEFT) removeLastCharacter()
   }
 
   const config = {
-    velocityThreshold: 0.05,
-    directionalOffsetThreshold: 10
+    velocityThreshold: 0.01,
+    directionalOffsetThreshold: 100
   }
 
   return (
@@ -85,11 +91,11 @@ const MainPage = ({ navigation }) => {
       <ButtonsContainer>
         <OperatorsContainer>
           <OperatorButton onPress={() => setOperator("+")}>
-            <OperatorButtonText color="green">+</OperatorButtonText>
+            <OperatorButtonText color="rgba(120,156,70,1)">+</OperatorButtonText>
           </OperatorButton>
 
           <OperatorButton onPress={() => setOperator("-")}>
-            <OperatorButtonText color="red">-</OperatorButtonText>
+            <OperatorButtonText color="rgba(231, 76, 60, 1)">-</OperatorButtonText>
           </OperatorButton>
         </OperatorsContainer>
 
@@ -106,8 +112,9 @@ const MainPage = ({ navigation }) => {
             <ConfirmButtonText operator={operator}>CREATE</ConfirmButtonText>
           </ConfirmButton>
 
-          <ConfirmButton onPress={() => setBigText("")}>
-            <ConfirmButtonText>CLEAR</ConfirmButtonText>
+          <ConfirmButton onPress={removeLastCharacter}>
+            <Icon name="backspace" size={30} />
+            {/* <ConfirmButtonText></ConfirmButtonText> */}
           </ConfirmButton>
         </ConfirmButtonContainer>
       </ButtonsContainer>
@@ -115,6 +122,7 @@ const MainPage = ({ navigation }) => {
       <Modal onBackdropPress={() => setShowModal(false)} isVisible={showModal}>
         <AddExpenseModal
           value={bigText}
+          setBigText={setBigText}
           isAdding={operator === "+"}
           navigation={navigation}
           setModal={setShowModal}

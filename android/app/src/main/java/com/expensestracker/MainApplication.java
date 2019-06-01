@@ -3,6 +3,7 @@ package com.expensestracker;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.wix.interactable.Interactable;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import ui.bottomactionsheet.RNBottomActionSheetPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new Interactable(),
             new RNCWebViewPackage(),
             new VectorIconsPackage(),
             new RNBottomActionSheetPackage(),

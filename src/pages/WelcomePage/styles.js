@@ -24,11 +24,10 @@ export const LoginFormContainer = styled.View`
 export const UsernameInput = styled.TextInput`
   width: 80%;
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid black;
   font-size: 16px;
-  padding: 10px 7px;
+  padding: 6px 2px;
   margin: 5px;
+  margin-bottom: 12px;
 `
 
 export const PasswordInput = styled(UsernameInput)``
@@ -41,7 +40,7 @@ export const LoginButtonContainer = styled.View`
 
 export const LoginButton = styled.TouchableOpacity`
   border-radius: 5px;
-  background: lightskyblue;
+  background: ${props => props.theme.colors.primaryNormal};
   width: 80%;
   padding: 10px 7px;
 `
@@ -65,7 +64,7 @@ export const RecoverPasswordButton = styled.TouchableOpacity`
 `
 
 export const RecoverPasswordText = styled.Text`
-  color: lightskyblue;
+  color: ${props => props.theme.colors.primaryNormal};
   font-size: 14px;
 `
 

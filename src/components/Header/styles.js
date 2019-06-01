@@ -15,14 +15,20 @@ export const StatusBar = styled.View`
   background-color: white;
 `
 
-export const StatusBarText = styled.Text`
+export const TitleContainer = styled.View`
+  align-self: center;
   margin: 0 auto;
+`
+
+export const StatusBarText = styled.Text`
   font-size: 16px;
   font-weight: bold;
+  text-align: center;
 `
 
 export const DrawerButton = styled.TouchableOpacity`
   margin: auto 10px;
+  margin-right: auto;
   align-self: flex-start;
 `
 
@@ -30,4 +36,10 @@ export const DrawerButtonText = styled.Text`
   font-size: 16px;
   font-weight: 600;
   color: ${props => (props.hideFilter ? "white" : "rgba(73, 110, 239, 1)")};
+`
+
+export const ExtraButton = styled.TouchableOpacity`
+  margin: auto 10px;
+  margin-left: auto;
+  align-self: flex-end;
 `

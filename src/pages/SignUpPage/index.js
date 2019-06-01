@@ -8,7 +8,8 @@ import {
   View,
   ActivityIndicator,
   StyleSheet,
-  Text
+  Text,
+  Animated
 } from "react-native"
 import { Mutation } from "react-apollo"
 
@@ -27,6 +28,8 @@ import {
   LoginPageButton,
   LoginPageButtonText
 } from "./styles"
+
+import AnimatedInput from "~/components/AnimatedInput"
 
 const styles = StyleSheet.create({
   container: {
@@ -57,6 +60,40 @@ const SignUpPage = ({ navigation }) => {
   const [errorMatch, setErrorMatch] = React.useState(false)
   const [errorEmpty, setErrorEmpty] = React.useState(false)
   const [errorSize, setErrorSize] = React.useState(false)
+
+  const [isNameActive, setIsNameActive] = React.useState(false)
+  const [isLoginActive, setIsLoginActive] = React.useState(false)
+  const [isPasswordActive, setIsPasswordActive] = React.useState(false)
+  const [isPasswordConfirmActive, setIsPasswordConfirmActive] = React.useState(false)
+
+  const [animationName] = React.useState(new Animated.Value(name.length === 0 ? 0 : 1))
+  const [animationLogin] = React.useState(new Animated.Value(email.length === 0 ? 0 : 1))
+  const [animationPassword] = React.useState(new Animated.Value(password.length === 0 ? 0 : 1))
+  const [animationPasswordConfirm] = React.useState(
+    new Animated.Value(passwordConfirm.length === 0 ? 0 : 1)
+  )
+
+  React.useEffect(() => {
+    Animated.timing(animationName, {
+      toValue: isNameActive || name.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationLogin, {
+      toValue: isLoginActive || email.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationPassword, {
+      toValue: isPasswordActive || password.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationPasswordConfirm, {
+      toValue: (isPasswordConfirmActive || passwordConfirm.length > 0) ? 1 : 0,
+      duration: 200
+    }).start()
+  })
 
   const handleSignUp = (signUpFunction) => {
     setErrorEmpty(false)
@@ -111,7 +148,7 @@ const SignUpPage = ({ navigation }) => {
         if (loading) {
           return (
             <View style={styles.container}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
             </View>
           )
         }
@@ -148,28 +185,68 @@ const SignUpPage = ({ navigation }) => {
               )}
 
               <SignUpFormContainer>
-                <UsernameInput
-                  autoCapitalize="none"
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="Your email"
-                />
+                <AnimatedInput textValue="Your email" animationStatus={animationLogin}>
+                  <UsernameInput
+                    autoCapitalize="none"
+                    onFocus={() => setIsLoginActive(true)}
+                    onBlur={() => setIsLoginActive(false)}
+                    style={{
+                      borderBottomColor: isLoginActive ? "rgba(73, 110, 239, 1)" : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                </AnimatedInput>
 
-                <UsernameInput value={name} onChangeText={setName} placeholder="Your name" />
+                <AnimatedInput textValue="Your name" animationStatus={animationName}>
+                  <UsernameInput
+                    style={{
+                      borderBottomColor: isLoginActive ? "rgba(73, 110, 239, 1)" : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    value={name}
+                    onFocus={() => setIsNameActive(true)}
+                    onBlur={() => setIsNameActive(false)}
+                    onChangeText={setName}
+                  />
+                </AnimatedInput>
 
-                <PasswordInput
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  placeholder="Password"
-                />
+                <AnimatedInput textValue="Password" animationStatus={animationPassword}>
+                  <PasswordInput
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setIsPasswordActive(true)}
+                    onBlur={() => setIsPasswordActive(false)}
+                    secureTextEntry
+                    textContentType="none"
+                    style={{
+                      borderBottomColor: isPasswordActive
+                        ? "rgba(73, 110, 239, 1)"
+                        : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                  />
+                </AnimatedInput>
 
-                <PasswordInput
-                  value={passwordConfirm}
-                  onChangeText={setPasswordConfirm}
-                  secureTextEntry
-                  placeholder="Confirm Password"
-                />
+                <AnimatedInput
+                  textValue="Confirm Password"
+                  animationStatus={animationPasswordConfirm}
+                >
+                  <PasswordInput
+                    value={passwordConfirm}
+                    onChangeText={setPasswordConfirm}
+                    onFocus={() => setIsPasswordConfirmActive(true)}
+                    onBlur={() => setIsPasswordConfirmActive(false)}
+                    style={{
+                      borderBottomColor: isPasswordConfirmActive
+                        ? "rgba(73, 110, 239, 1)"
+                        : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    secureTextEntry
+                  />
+                </AnimatedInput>
               </SignUpFormContainer>
 
               <SignUpButtonContainer>

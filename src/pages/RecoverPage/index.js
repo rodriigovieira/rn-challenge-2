@@ -4,7 +4,13 @@ import gql from "graphql-tag"
 
 import { Mutation } from "react-apollo"
 import {
-  View, ActivityIndicator, StyleSheet, Text
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  Animated,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native"
 
 import {
@@ -20,6 +26,8 @@ import {
   ReturnHomePageButton,
   ReturnHomePageButtonText
 } from "./styles"
+
+import AnimatedInput from "~/components/AnimatedInput"
 
 const styles = StyleSheet.create({
   container: {
@@ -55,6 +63,16 @@ const RecoverPage = ({ navigation }) => {
   const [invalidError, setInvalidError] = React.useState(false)
   const [emptyError, setEmptyError] = React.useState(false)
 
+  const [isRecoverActive, setIsRecoverActive] = React.useState(false)
+  const [animation] = React.useState(new Animated.Value(email.length === 0 ? 0 : 1))
+
+  React.useEffect(() => {
+    Animated.timing(animation, {
+      toValue: (isRecoverActive || email.length > 0) ? 1 : 0,
+      duration: 200
+    }).start()
+  })
+
   const handleRecover = (recoverFunction) => {
     setEmptyError(false)
     setShowMessage(false)
@@ -87,57 +105,68 @@ const RecoverPage = ({ navigation }) => {
         if (loading) {
           return (
             <View style={styles.container}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
             </View>
           )
         }
         return (
-          <Container>
-            <TitleContainer>
-              <TitleText>Recover Password</TitleText>
-            </TitleContainer>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <Container>
+              <TitleContainer>
+                <TitleText>Recover Password</TitleText>
+              </TitleContainer>
 
-            {emptyError && (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>You have to provide an email.</Text>
-              </View>
-            )}
+              {emptyError && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>You have to provide an email.</Text>
+                </View>
+              )}
 
-            {(invalidError || requestError) && (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>There is no account with the provided email.</Text>
-              </View>
-            )}
+              {(invalidError || requestError) && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>There is no account with the provided email.</Text>
+                </View>
+              )}
 
-            {showMessage && (
-              <View style={styles.errorContainer}>
-                <Text style={styles.successText}>
-                  An email wast sent with instructions on how to proceed.
-                </Text>
-              </View>
-            )}
+              {showMessage && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.successText}>
+                    An email wast sent with instructions on how to proceed.
+                  </Text>
+                </View>
+              )}
 
-            <RecoverFormContainer>
-              <EmailInput
-                placeholder="Type your account email here"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-              />
-            </RecoverFormContainer>
+              <RecoverFormContainer>
+                <AnimatedInput textValue="Type your account email here" animationStatus={animation}>
+                  <EmailInput
+                    autoCapitalize="none"
+                    style={{
+                      borderBottomColor: isRecoverActive
+                        ? "rgba(73, 110, 239, 1)"
+                        : "rgba(0,0,0,.4)",
+                      borderBottomWidth: 1
+                    }}
+                    value={email}
+                    onChangeText={setEmail}
+                    onFocus={() => setIsRecoverActive(true)}
+                    onBlur={() => setIsRecoverActive(false)}
+                  />
+                </AnimatedInput>
+              </RecoverFormContainer>
 
-            <RecoverButtonContainer>
-              <RecoverButton onPress={() => handleRecover(recoverFunction)}>
-                <RecoverButtonText>Recover Password</RecoverButtonText>
-              </RecoverButton>
-            </RecoverButtonContainer>
+              <RecoverButtonContainer>
+                <RecoverButton onPress={() => handleRecover(recoverFunction)}>
+                  <RecoverButtonText>Recover Password</RecoverButtonText>
+                </RecoverButton>
+              </RecoverButtonContainer>
 
-            <ActionsContainer>
-              <ReturnHomePageButton onPress={() => navigation.navigate("WelcomePage")}>
-                <ReturnHomePageButtonText>Return to Login Page</ReturnHomePageButtonText>
-              </ReturnHomePageButton>
-            </ActionsContainer>
-          </Container>
+              <ActionsContainer>
+                <ReturnHomePageButton onPress={() => navigation.navigate("WelcomePage")}>
+                  <ReturnHomePageButtonText>Return to Login Page</ReturnHomePageButtonText>
+                </ReturnHomePageButton>
+              </ActionsContainer>
+            </Container>
+          </TouchableWithoutFeedback>
         )
       }}
     </Mutation>
