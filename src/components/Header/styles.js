@@ -1,13 +1,16 @@
 import styled from "styled-components/native"
 import { getStatusBarHeight } from "react-native-status-bar-height"
+import { Dimensions } from "react-native"
 
-const height = getStatusBarHeight()
+const statusBarHeight = Number(getStatusBarHeight())
+
+const screenFraction = Dimensions.get("window").height / 16
 
 export const StatusBar = styled.View`
   border: 0 solid rgba(0, 0, 0, 0.4);
   width: 100%;
-  height: ${44 + height};
-  padding-top: ${height};
+  height: ${screenFraction + statusBarHeight};
+  padding-top: ${statusBarHeight};
   border-bottom-width: 0.3;
   justify-content: space-between;
   flex-direction: row;

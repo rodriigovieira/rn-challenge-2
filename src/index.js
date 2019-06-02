@@ -12,6 +12,9 @@ import client from "~/utils/apolloClient"
 
 import createNavigator from "~/routes"
 
+import AppContext from "~/context/AppContext"
+import AppReducer from "~/reducers/AppReducer"
+
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
@@ -23,6 +26,21 @@ const styles = StyleSheet.create({
 const App = () => {
   const [userLogged, setUserLogged] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
+
+  const [state, dispatch] = React.useReducer(AppReducer, {
+    name: "User"
+  })
+
+  React.useEffect(() => {
+    AsyncStorage.getItem("@name").then((user) => {
+      if (user) {
+        dispatch({
+          type: "SET_USER_NAME",
+          name: user
+        })
+      }
+    })
+  }, [])
 
   React.useEffect(() => {
     AsyncStorage.getItem("@token")
@@ -53,7 +71,9 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <Routes />
+        <AppContext.Provider value={{ state, dispatch }}>
+          <Routes />
+        </AppContext.Provider>
       </ThemeProvider>
     </ApolloProvider>
   )

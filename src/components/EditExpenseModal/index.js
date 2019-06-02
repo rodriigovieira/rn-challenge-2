@@ -1,5 +1,7 @@
 import React, { useState } from "react"
-import { ActivityIndicator, View, StyleSheet } from "react-native"
+import {
+  ActivityIndicator, View, StyleSheet, KeyboardAvoidingView, Animated
+} from "react-native"
 import { Mutation } from "react-apollo"
 import Modal from "react-native-modal"
 import PropTypes from "prop-types"
@@ -13,7 +15,6 @@ import {
   ExpenseTypeContainer,
   ExpensesTextContainer,
   ExpenseTypeText,
-  ExpenseValueTextInput,
   ButtonsContainer,
   OperatorButton,
   OperatorButtonText,
@@ -23,7 +24,8 @@ import {
   ConfirmButton,
   ConfirmButtonText
 } from "./styles"
-import api from "~/services/api"
+
+import AnimatedInput from "~/components/AnimatedInput"
 
 const styles = StyleSheet.create({
   container: {
@@ -53,23 +55,47 @@ const styles = StyleSheet.create({
 
 const EditExpenseModal = ({
   expense: {
-    value: propValue, description: propDescription, id, type: propType
+    value: propValue, description: propDescription, id, type: propType, name: propName
   },
   modal,
   onBackdropPress,
-  handleRefresh,
   setShowModal,
-  refetch
+  setModalIndex
 }) => {
   const [showPlusColor, setShowPlusColor] = useState(propType === "POSITIVE")
   const [showMinusColor, setShowMinusColor] = useState(propType === "NEGATIVE")
 
   const [description, setDescription] = useState(propDescription)
-  const [name, setName] = useState("")
-  const [value, setValue] = useState(propValue)
+  const [title, setTitle] = useState(propName)
+  const [value, setValue] = useState(propValue.toString())
   const [type, setType] = useState(propType)
 
-  const color = showMinusColor ? "rgba(231, 76, 60, 1)" : "rgba(170, 198, 149, 1)"
+  const [isValueActive, setIsValueActive] = React.useState(false)
+  const [isTitleActive, setIsTitleActive] = React.useState(false)
+  const [isDescriptionActive, setIsDescriptionActive] = React.useState(false)
+
+  const [animationValue] = React.useState(new Animated.Value(0))
+  const [animationTitle] = React.useState(new Animated.Value(0))
+  const [animationDescription] = React.useState(new Animated.Value(0))
+
+  React.useEffect(() => {
+    Animated.timing(animationValue, {
+      toValue: isValueActive || value.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationTitle, {
+      toValue: isTitleActive || title.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+
+    Animated.timing(animationDescription, {
+      toValue: isDescriptionActive || description.length > 0 ? 1 : 0,
+      duration: 200
+    }).start()
+  })
+
+  const color = showMinusColor ? "rgba(231, 76, 60, 1)" : "rgba(120,156,70,1)"
 
   const handlePlusClick = () => {
     setShowPlusColor(true)
@@ -89,10 +115,14 @@ const EditExpenseModal = ({
         description,
         value: parseFloat(value),
         type,
-        name,
+        name: title,
         id
       }
-    }).then(() => setShowModal(false))
+    }).then(() => {
+      setModalIndex(-1)
+
+      setShowModal(false)
+    })
   }
 
   return (
@@ -118,7 +148,7 @@ const EditExpenseModal = ({
         }
       `}
     >
-      {(updateFunction, { loading, error }) => {
+      {(updateFunction, { loading }) => {
         if (loading) {
           return (
             <View style={styles.container}>
@@ -130,60 +160,111 @@ const EditExpenseModal = ({
         return (
           <Container>
             <Modal onBackdropPress={onBackdropPress} isVisible={modal}>
-              <ContentContainer>
-                <ModalTitle>
-                  <ModalTitleText>Edit Expense</ModalTitleText>
-                </ModalTitle>
+              <KeyboardAvoidingView behavior="padding" enabled>
+                <ContentContainer>
+                  <ModalTitle>
+                    <ModalTitleText>Edit Expense</ModalTitleText>
+                  </ModalTitle>
 
-                <ExpenseTypeContainer>
-                  <ExpensesTextContainer>
-                    <ExpenseTypeText>Type:</ExpenseTypeText>
-                  </ExpensesTextContainer>
+                  <ExpenseTypeContainer>
+                    <ExpensesTextContainer>
+                      <ExpenseTypeText>Type:</ExpenseTypeText>
+                    </ExpensesTextContainer>
 
-                  <ButtonsContainer>
-                    <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
-                      <OperatorButtonText>+</OperatorButtonText>
-                    </OperatorButton>
+                    <ButtonsContainer>
+                      <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
+                        <OperatorButtonText>+</OperatorButtonText>
+                      </OperatorButton>
 
-                    <Divider />
+                      <Divider />
 
-                    <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
-                      <OperatorButtonText>-</OperatorButtonText>
-                    </OperatorButton>
-                  </ButtonsContainer>
-                </ExpenseTypeContainer>
+                      <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
+                        <OperatorButtonText>-</OperatorButtonText>
+                      </OperatorButton>
+                    </ButtonsContainer>
+                  </ExpenseTypeContainer>
 
-                <ExpenseTypeContainer>
-                  <ExpensesTextContainer>
-                    <ExpenseTypeText>Value:</ExpenseTypeText>
-                  </ExpensesTextContainer>
+                  <DescriptionContainer color={color}>
+                    <AnimatedInput
+                      color={color}
+                      left="0%"
+                      textValue="Value"
+                      animationStatus={animationValue}
+                    >
+                      <DescriptionTextInput
+                        keyboardType="numeric"
+                        onFocus={() => setIsValueActive(true)}
+                        onBlur={() => setIsValueActive(false)}
+                        style={{
+                          borderBottomColor: isValueActive ? color : "rgba(0,0,0,.4)",
+                          borderBottomWidth: 1
+                        }}
+                        onChangeText={setValue}
+                        value={value.toString()}
+                      />
+                    </AnimatedInput>
+                  </DescriptionContainer>
 
-                  <ExpenseValueTextInput
-                    keyboardType="numeric"
-                    onChangeText={setValue}
+                  <DescriptionContainer color={color}>
+                    <AnimatedInput
+                      color={color}
+                      left="0%"
+                      textValue="Title"
+                      animationStatus={animationTitle}
+                    >
+                      <DescriptionTextInput
+                        onFocus={() => setIsTitleActive(true)}
+                        onBlur={() => setIsTitleActive(false)}
+                        style={{
+                          borderBottomColor: isTitleActive ? color : "rgba(0,0,0,.4)",
+                          borderBottomWidth: 1
+                        }}
+                        onChangeText={setTitle}
+                        multiline
+                        value={title}
+                      />
+                    </AnimatedInput>
+                  </DescriptionContainer>
+
+                  <DescriptionContainer color={color}>
+                    <AnimatedInput
+                      color={color}
+                      left="0%"
+                      textValue="Description"
+                      animationStatus={animationDescription}
+                    >
+                      <DescriptionTextInput
+                        onFocus={() => setIsDescriptionActive(true)}
+                        onBlur={() => setIsDescriptionActive(false)}
+                        style={{
+                          borderBottomColor: isDescriptionActive ? color : "rgba(0,0,0,.4)",
+                          borderBottomWidth: 1
+                        }}
+                        onChangeText={setDescription}
+                        multiline
+                        value={description}
+                      />
+                    </AnimatedInput>
+                  </DescriptionContainer>
+
+                  <ConfirmButton
+                    style={{
+                      shadowOffset: { width: 0, height: 0 },
+                      shadowColor: "rgba(0,0,0,.2)",
+                      shaddowRadius: 15,
+                      shadowOpacity: 1
+                    }}
                     color={color}
+                    onPress={() => handleSubmit(updateFunction)}
                   >
-                    {value}
-                  </ExpenseValueTextInput>
-                </ExpenseTypeContainer>
-
-                <DescriptionContainer color={color}>
-                  <DescriptionTextInput
-                    value={description}
-                    placeholder="Description goes here"
-                    onChangeText={setDescription}
-                    multiline
-                  />
-                </DescriptionContainer>
-
-                <ConfirmButton color={color} onPress={() => handleSubmit(updateFunction)}>
-                  {loading ? (
-                    <ActivityIndicator size="large" color="black" />
-                  ) : (
-                    <ConfirmButtonText>CONFIRM</ConfirmButtonText>
-                  )}
-                </ConfirmButton>
-              </ContentContainer>
+                    {loading ? (
+                      <ActivityIndicator size="large" color="black" />
+                    ) : (
+                      <ConfirmButtonText>CONFIRM</ConfirmButtonText>
+                    )}
+                  </ConfirmButton>
+                </ContentContainer>
+              </KeyboardAvoidingView>
             </Modal>
           </Container>
         )
@@ -201,7 +282,6 @@ EditExpenseModal.propTypes = {
     type: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired
   }).isRequired,
-  handleRefresh: PropTypes.func.isRequired,
   setShowModal: PropTypes.func.isRequired
 }
 

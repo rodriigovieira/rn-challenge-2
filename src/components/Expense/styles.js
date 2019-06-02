@@ -1,21 +1,14 @@
 import styled from "styled-components/native"
 
-export const ExpenseContainer = styled.View`
-  background-color: lightgray;
-  align-items: center;
-  justify-content: center;
-`
-
 export const ExpenseButton = styled.TouchableOpacity`
-min-height: 80px;
-  padding: 10px;
+  border-radius: 10px;
+  min-height: 80px;
   width: 100%;
+  padding: 10px;
   justify-content: space-around;
   align-items: center;
-  border: 0 solid black;
-  border-top-width: .5px;
-  border-bottom-width: 1px;
-  background-color: white;
+  margin: 10px 0;
+  background-color: rgba(0, 0, 0, 0.1);
 `
 
 export const ExpenseValueText = styled.Text`

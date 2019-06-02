@@ -202,7 +202,7 @@ const SignUpPage = ({ navigation }) => {
                 <AnimatedInput textValue="Your name" animationStatus={animationName}>
                   <UsernameInput
                     style={{
-                      borderBottomColor: isLoginActive ? "rgba(73, 110, 239, 1)" : "rgba(0,0,0,.4)",
+                      borderBottomColor: isNameActive ? "rgba(73, 110, 239, 1)" : "rgba(0,0,0,.4)",
                       borderBottomWidth: 1
                     }}
                     value={name}

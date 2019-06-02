@@ -3,12 +3,11 @@ package com.expensestracker;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.wix.interactable.Interactable;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import ui.bottomactionsheet.RNBottomActionSheetPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -29,12 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new Interactable(),
+            new RNGestureHandlerPackage(),
             new RNCWebViewPackage(),
             new VectorIconsPackage(),
             new RNBottomActionSheetPackage(),
-            new AsyncStoragePackage(),
-            new RNGestureHandlerPackage()
+            new AsyncStoragePackage()
       );
     }
 

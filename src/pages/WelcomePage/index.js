@@ -34,6 +34,7 @@ import {
 } from "./styles"
 
 import AnimatedInput from "~/components/AnimatedInput"
+import AppContext from "~/context/AppContext"
 
 const styles = StyleSheet.create({
   container: {
@@ -73,6 +74,8 @@ const Welcome = ({ navigation }) => {
 
   const [isLoginActive, setIsLoginActive] = React.useState(false)
   const [isPasswordActive, setIsPasswordActive] = React.useState(false)
+
+  const { dispatch } = React.useContext(AppContext)
 
   const passwordChanged = navigation.getParam("passwordChanged")
 
@@ -129,9 +132,14 @@ const Welcome = ({ navigation }) => {
           return
         }
 
-        AssyncStorage.setItem("@token", data.loginUser.token)
-          .then(() => navigation.navigate("User"))
-          .catch(() => setErrorPassword(true))
+        AssyncStorage.setItem("@token", data.loginUser.token).then(() => {
+          navigation.navigate("User")
+
+          dispatch({
+            type: "SET_USER_NAME",
+            name: data.loginUser.user.name
+          })
+        })
       })
       .catch(() => setErrorPassword(true))
   }
@@ -144,6 +152,8 @@ const Welcome = ({ navigation }) => {
             token
             user {
               id
+              name
+              email
             }
           }
         }

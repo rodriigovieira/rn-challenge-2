@@ -29,6 +29,8 @@
     "semi": 0,
     "quotes": 0,
     "comma-dangle": 0,
+    "react/prop-types": 1,
+    "react-native/no-unused-styles": 1,
     "react/jsx-one-expression-per-line": "off",
     "react-native/no-color-literals": "off",
     "react-native/sort-styles": "off",

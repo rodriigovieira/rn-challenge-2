@@ -7,7 +7,8 @@ import {
   StyleSheet,
   View,
   Animated,
-  Text
+  Text,
+  KeyboardAvoidingView
 } from "react-native"
 import { Mutation } from "react-apollo"
 
@@ -24,7 +25,6 @@ import {
   OperatorButtonText,
   Divider,
   ValueContainer,
-  ValueText,
   DescriptionContainer,
   DescriptionTextInput,
   ConfirmButton,
@@ -151,7 +151,7 @@ const AddExpenseModal = ({
         }
       `}
     >
-      {(createExpenseFunction, { loading, error }) => {
+      {(createExpenseFunction, { loading }) => {
         if (loading) {
           return (
             <View style={styles.container}>
@@ -162,101 +162,112 @@ const AddExpenseModal = ({
 
         return (
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <ContentContainer>
-              <ModalTitle>
-                <ModalTitleText>Create Expense</ModalTitleText>
-              </ModalTitle>
+            <KeyboardAvoidingView behavior="padding" enabled>
+              <ContentContainer>
+                <ModalTitle>
+                  <ModalTitleText>Create Expense</ModalTitleText>
+                </ModalTitle>
 
-              <ExpenseTypeContainer>
-                <ExpensesTextContainer>
-                  <ExpenseTypeText>Type:</ExpenseTypeText>
-                </ExpensesTextContainer>
+                <ExpenseTypeContainer>
+                  <ExpensesTextContainer>
+                    <ExpenseTypeText>Type:</ExpenseTypeText>
+                  </ExpensesTextContainer>
 
-                <ButtonsContainer>
-                  <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
-                    <OperatorButtonText>+</OperatorButtonText>
-                  </OperatorButton>
+                  <ButtonsContainer>
+                    <OperatorButton onPress={handlePlusClick} showPlusColor={showPlusColor}>
+                      <OperatorButtonText>+</OperatorButtonText>
+                    </OperatorButton>
 
-                  <Divider />
+                    <Divider />
 
-                  <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
-                    <OperatorButtonText>-</OperatorButtonText>
-                  </OperatorButton>
-                </ButtonsContainer>
-              </ExpenseTypeContainer>
+                    <OperatorButton onPress={handleMinusClick} showMinusColor={showMinusColor}>
+                      <OperatorButtonText>-</OperatorButtonText>
+                    </OperatorButton>
+                  </ButtonsContainer>
+                </ExpenseTypeContainer>
 
-              <DescriptionContainer color={color}>
-                <AnimatedInput
-                  color={color}
-                  textValue="Expense Title"
-                  animationStatus={animationTitle}
-                  left="0%"
-                >
-                  <TitleTextInput
-                    onFocus={() => setIsTitleActive(true)}
-                    style={{
-                      borderBottomColor: isTitleActive ? color : "rgba(0,0,0,.4)",
-                      borderBottomWidth: 1
-                    }}
-                    onBlur={() => setIsTitleActive(false)}
-                    value={title}
-                    onChangeText={setTitle}
-                  />
-                </AnimatedInput>
-                <AnimatedInput
-                  textValue="Description goes here"
-                  color={color}
-                  animationStatus={animationDescription}
-                  left="0%"
-                >
-                  <DescriptionTextInput
-                    onFocus={() => setIsDescriptionActive(true)}
-                    style={{
-                      borderBottomColor: isDescriptionActive ? color : "rgba(0,0,0,.4)",
-                      borderBottomWidth: 1
-                    }}
-                    onBlur={() => setIsDescriptionActive(false)}
-                    value={description}
-                    onChangeText={setDescription}
-                    multiline
-                  />
-                </AnimatedInput>
-              </DescriptionContainer>
+                <DescriptionContainer color={color}>
+                  <AnimatedInput
+                    color={color}
+                    textValue="Expense Title"
+                    animationStatus={animationTitle}
+                    left="0%"
+                  >
+                    <TitleTextInput
+                      onFocus={() => setIsTitleActive(true)}
+                      style={{
+                        borderBottomColor: isTitleActive ? color : "rgba(0,0,0,.4)",
+                        borderBottomWidth: 1
+                      }}
+                      onBlur={() => setIsTitleActive(false)}
+                      value={title}
+                      onChangeText={setTitle}
+                    />
+                  </AnimatedInput>
+                  <AnimatedInput
+                    textValue="Description goes here"
+                    color={color}
+                    animationStatus={animationDescription}
+                    left="0%"
+                  >
+                    <DescriptionTextInput
+                      onFocus={() => setIsDescriptionActive(true)}
+                      style={{
+                        borderBottomColor: isDescriptionActive ? color : "rgba(0,0,0,.4)",
+                        borderBottomWidth: 1
+                      }}
+                      onBlur={() => setIsDescriptionActive(false)}
+                      value={description}
+                      onChangeText={setDescription}
+                      multiline
+                    />
+                  </AnimatedInput>
+                </DescriptionContainer>
 
-              {errorEmpty && (
-                <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>ERROR! You need to fill all fields.</Text>
-                </View>
-              )}
-
-              <ValueContainer isAdding={showPlusColor}>
-                {/* <ValueText> */}
-                <Animated.Text
-                  style={{
-                    fontSize: animationValue.interpolate({
-                      inputRange: [0, 0.3, 0.7, 1],
-                      outputRange: [30, 18, 50, 30]
-                    }),
-                    fontWeight: "bold",
-                    color: animationValue.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ["rgba(120,156,70,1)", "rgba(231, 76, 60, 1)"]
-                    })
-                  }}
-                >
-                  {`$${value}`}
-                </Animated.Text>
-                {/* </ValueText> */}
-              </ValueContainer>
-
-              <ConfirmButton color={color} onPress={() => handleCreate(createExpenseFunction)}>
-                {loading ? (
-                  <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
-                ) : (
-                  <ConfirmButtonText>CONFIRM</ConfirmButtonText>
+                {errorEmpty && (
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>ERROR! You need to fill all fields.</Text>
+                  </View>
                 )}
-              </ConfirmButton>
-            </ContentContainer>
+
+                <ValueContainer isAdding={showPlusColor}>
+                  {/* <ValueText> */}
+                  <Animated.Text
+                    style={{
+                      fontSize: animationValue.interpolate({
+                        inputRange: [0, 0.3, 0.7, 1],
+                        outputRange: [30, 18, 50, 30]
+                      }),
+                      fontWeight: "bold",
+                      color: animationValue.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ["rgba(120,156,70,1)", "rgba(231, 76, 60, 1)"]
+                      })
+                    }}
+                  >
+                    {`$${value}`}
+                  </Animated.Text>
+                  {/* </ValueText> */}
+                </ValueContainer>
+
+                <ConfirmButton
+                  style={{
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowColor: "rgba(0,0,0,.2)",
+                    shaddowRadius: 15,
+                    shadowOpacity: 1,
+                  }}
+                  color={color}
+                  onPress={() => handleCreate(createExpenseFunction)}
+                >
+                  {loading ? (
+                    <ActivityIndicator size="large" color="rgba(73, 110, 239, 1)" />
+                  ) : (
+                    <ConfirmButtonText>CONFIRM</ConfirmButtonText>
+                  )}
+                </ConfirmButton>
+              </ContentContainer>
+            </KeyboardAvoidingView>
           </TouchableWithoutFeedback>
         )
       }}

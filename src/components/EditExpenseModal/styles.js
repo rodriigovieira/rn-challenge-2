@@ -50,22 +50,26 @@ const ButtonsContainer = styled.View`
   flex-direction: row;
   overflow: hidden;
   height: 75%;
+  width: 40%;
+  min-width: 120px;
 `
 
 const OperatorButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  padding: 10px 25px;
+  padding-top: auto;
   background-color: ${(props) => {
-    if (props.showPlusColor) return "rgba(170, 198, 149, 1)"
+    if (props.showPlusColor) return "rgba(120,156,70,1)"
     if (props.showMinusColor) return "rgba(231, 76, 60, 1)"
 
     return "white"
   }};
   overflow: hidden;
+  width: 50%;
 `
 
 const OperatorButtonText = styled.Text`
+  margin: 5%;
   font-size: 30px;
   font-weight: bold;
   color: black;
@@ -99,14 +103,12 @@ export const DescriptionContainer = styled.View`
   width: 90%;
   align-items: center;
   justify-content: center;
-  border: 0 solid ${props => props.color};
-  border-bottom-width: 1px;
-  padding: 3px;
 `
 
 export const DescriptionTextInput = styled.TextInput`
+  padding: 3px 0;
+  margin: 3%;
   width: 100%;
-  text-align: center;
   font-size: 22px;
 `
 

@@ -41,12 +41,14 @@ const ButtonsContainer = styled.View`
   border-radius: 15px;
   flex-direction: row;
   overflow: hidden;
+  width: 40%;
+  min-width: 120px;
 `
 
 const OperatorButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  padding: 10px 25px;
+  width: 50%;
   background-color: ${(props) => {
     if (props.showPlusColor) return "rgba(120,156,70,1)"
     if (props.showMinusColor) return "rgba(231, 76, 60, 1)"
@@ -58,6 +60,7 @@ const OperatorButton = styled.TouchableOpacity`
 
 const OperatorButtonText = styled.Text`
   font-size: 30px;
+  margin: 9%;
   font-weight: bold;
   color: black;
 `

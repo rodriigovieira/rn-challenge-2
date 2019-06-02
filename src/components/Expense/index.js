@@ -12,8 +12,6 @@ import {
 } from "./styles"
 import EditExpenseModal from "~/components/EditExpenseModal"
 
-import api from "~/services/api"
-
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
@@ -42,10 +40,18 @@ const styles = StyleSheet.create({
 
 const Expense = ({
   expense: {
-    value, type, id, description
-  }, handleRefresh, refetch
+    value, type, id, description, name: title
+  },
+  handleRefresh,
+  refetch,
+  index,
+  modalIndex,
+  setModalIndex
 }) => {
   const [showModal, setShowModal] = useState(false)
+  React.useEffect(() => {
+    if (index === modalIndex) setShowModal(true)
+  }, [modalIndex])
 
   const handleDelete = (deleteFunction) => {
     deleteFunction({ variables: { id } })
@@ -79,6 +85,10 @@ const Expense = ({
         return (
           <>
             <Swipeout
+              style={{
+                backgroundColor: "white",
+                width: "100%"
+              }}
               right={[
                 {
                   text: loading ? <ActivityIndicator /> : "Delete",
@@ -98,28 +108,31 @@ const Expense = ({
                 }
               ]}
             >
-              <ExpenseContainer>
-                <ExpenseButton onPress={() => setShowModal(true)}>
-                  <ExpenseValueText
-                    color={
-                      type === "POSITIVE" ? "rgba(144, 198, 149, .7)" : "rgba(231, 76, 60, .7)"
-                    }
-                    style={{
-                      textShadowColor: "#585858",
-                      textShadowRadius: 0.1,
-                      textShadowOffset: { width: 1, height: 1 }
-                    }}
-                  >
-                    {`${type === "POSITIVE" ? "+" : "-"}${value}`}
-                  </ExpenseValueText>
+              {/* <ExpenseContainer> */}
+              <ExpenseButton onPress={() => setModalIndex(index)}>
+                <ExpenseValueText
+                  color={type === "POSITIVE" ? "rgba(144, 198, 149, .7)" : "rgba(231, 76, 60, .7)"}
+                  style={{
+                    textShadowColor: "#585858",
+                    textShadowRadius: 0.1,
+                    textShadowOffset: { width: 1, height: 1 }
+                  }}
+                >
+                  {`${type === "POSITIVE" ? "+" : "-"}${value}`}
+                </ExpenseValueText>
 
-                  {description ? <DescriptionText>{description}</DescriptionText> : null}
-                </ExpenseButton>
-              </ExpenseContainer>
+                {title ? <DescriptionText>{title}</DescriptionText> : null}
+              </ExpenseButton>
+              {/* </ExpenseContainer> */}
             </Swipeout>
 
             <EditExpenseModal
-              onBackdropPress={() => setShowModal(false)}
+              onBackdropPress={() => {
+                setModalIndex(-1)
+
+                setShowModal(false)
+              }}
+              setModalIndex={setModalIndex}
               modal={showModal}
               setShowModal={setShowModal}
               handleRefresh={handleRefresh}
@@ -127,7 +140,8 @@ const Expense = ({
                 value,
                 type,
                 id,
-                description
+                description,
+                name: title
               }}
               refetch={refetch}
             />

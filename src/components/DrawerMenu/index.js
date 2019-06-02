@@ -14,6 +14,8 @@ import {
   UserNameText
 } from "./styles"
 
+import AppContext from "~/context/AppContext"
+
 const menuData = [
   {
     name: "Add Expense",
@@ -40,6 +42,8 @@ const DrawerMenu = ({ onItemPress, navigation }) => {
 
   const [activeRoute, setActiveRoute] = React.useState(activeItemKey)
 
+  const { state } = React.useContext(AppContext)
+
   React.useEffect(() => {
     setActiveRoute(activeItemKey)
   }, [activeItemKey])
@@ -53,7 +57,7 @@ const DrawerMenu = ({ onItemPress, navigation }) => {
           </HeaderIconContainer>
 
           <TextContainer>
-            <UserNameText>Rodrigo Vieira</UserNameText>
+            <UserNameText>Hey, {state.name}!</UserNameText>
           </TextContainer>
         </HeaderContainer>
 
@@ -87,7 +91,12 @@ const DrawerMenu = ({ onItemPress, navigation }) => {
 }
 
 DrawerMenu.propTypes = {
-  onItemPress: PropTypes.func.isRequired
+  onItemPress: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    state: PropTypes.shape({
+      index: PropTypes.number.isRequired
+    }).isRequired
+  }).isRequired
 }
 
 export default DrawerMenu

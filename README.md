@@ -4,8 +4,6 @@ This is the second challenge of the React Native mastermind.
 
 This is a simple application for my personal use that helps you create the habit of being aware of your dialy expenses. The goal is to make you aware of everything that you receive and that you spend, by adding each of these small transactions every time.
 
-It features a simple Firebase integration, and all the data is fetched from a public Firebase project.
-
 This application is consuming a GraphQL API which is available here: https://github.com/rodriigovieira/expenses-api. It features a complete integration using React-Apollo, and it has a complete authentication system, with login, logout, sign up and password recovery. All expenses are associated with a specific user.
 
 # Screenshots
