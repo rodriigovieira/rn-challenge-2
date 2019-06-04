@@ -106,7 +106,7 @@ const Welcome = ({ navigation }) => {
   React.useEffect(() => {
     if (Platform.OS === "android") {
       Linking.getInitialURL().then((url) => {
-        this.navigate(url)
+        if (url) navigate(url)
       })
     } else {
       Linking.addEventListener("url", handleOpenURL)
@@ -126,19 +126,19 @@ const Welcome = ({ navigation }) => {
     loginFunction({
       variables: { email, password }
     })
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         if (!data.loginUser.token) {
           setErrorPassword(true)
           return
         }
 
-        AssyncStorage.setItem("@token", data.loginUser.token).then(() => {
-          navigation.navigate("User")
+        await AssyncStorage.setItem("@token", data.loginUser.token)
 
-          dispatch({
-            type: "SET_USER_NAME",
-            name: data.loginUser.user.name
-          })
+        navigation.navigate("MainPage")
+
+        dispatch({
+          type: "SET_USER_NAME",
+          name: data.loginUser.user.name
         })
       })
       .catch(() => setErrorPassword(true))

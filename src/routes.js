@@ -29,15 +29,19 @@ const Routes = (userLogged = false) => createAppContainer(
         {
           MainPage,
           ExpensesPage,
-          InfoPage: createStackNavigator({
-            InfoPage,
-            RepoWebViewPage
-          }, {
-            mode: "modal"
-          })
+          InfoPage: createStackNavigator(
+            {
+              InfoPage,
+              RepoWebViewPage
+            },
+            {
+              mode: "modal"
+            }
+          )
         },
         {
-          contentComponent: DrawerMenu
+          contentComponent: DrawerMenu,
+          initialRouteName: "MainPage"
         }
       )
     },

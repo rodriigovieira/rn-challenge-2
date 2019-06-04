@@ -1,6 +1,12 @@
 import React, { useState } from "react"
 import {
-  ActivityIndicator, View, StyleSheet, KeyboardAvoidingView, Animated
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Animated,
+  Platform,
+  ScrollView
 } from "react-native"
 import { Mutation } from "react-apollo"
 import Modal from "react-native-modal"
@@ -160,7 +166,11 @@ const EditExpenseModal = ({
         return (
           <Container>
             <Modal onBackdropPress={onBackdropPress} isVisible={modal}>
-              <KeyboardAvoidingView behavior="padding" enabled>
+              {/* <ScrollView> */}
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "padding"}
+                enabled
+              >
                 <ContentContainer>
                   <ModalTitle>
                     <ModalTitleText>Edit Expense</ModalTitleText>
@@ -265,6 +275,7 @@ const EditExpenseModal = ({
                   </ConfirmButton>
                 </ContentContainer>
               </KeyboardAvoidingView>
+              {/* </ScrollView> */}
             </Modal>
           </Container>
         )

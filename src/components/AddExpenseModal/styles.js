@@ -1,10 +1,14 @@
 import styled from "styled-components/native"
+import { Dimensions } from "react-native"
+
+const { height } = Dimensions.get("window")
 
 const ContentContainer = styled.View`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 1);
+  height: ${height * 0.7};
 `
 
 const ModalTitle = styled.View`
@@ -114,6 +118,7 @@ export const DescriptionTextInput = styled.TextInput`
   padding-bottom: 2px;
   margin: 12px 0;
   width: 100%;
+  margin-bottom: 5%;
 `
 
 export const TitleTextInput = styled(DescriptionTextInput)``

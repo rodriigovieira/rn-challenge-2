@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import Modal from "react-native-modal"
 import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures"
 import Icon from "react-native-vector-icons/FontAwesome5"
+import { StatusBar } from "react-native"
 
 import {
   Container,
@@ -43,7 +44,7 @@ const MainPage = ({ navigation }) => {
 
     let limit = 8
 
-    if (bigText.includes('.')) {
+    if (bigText.includes(".")) {
       limit = 10
 
       const dotIndex = nextString.indexOf(".")

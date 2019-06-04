@@ -1,4 +1,7 @@
 import styled from "styled-components/native"
+import { Dimensions } from "react-native"
+
+const { height } = Dimensions.get("window")
 
 const Container = styled.View`
   align-items: center;
@@ -10,6 +13,7 @@ const ContentContainer = styled.View`
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 1);
+  height: ${height * 0.7};
 `
 
 const ModalTitle = styled.View`
@@ -82,7 +86,7 @@ const Divider = styled.View`
 `
 
 const ConfirmButton = styled.TouchableOpacity`
-  margin-top: auto;
+  margin-top: 5%;
   border-radius: 5px;
   width: 90%;
   padding: 10px;
@@ -110,6 +114,7 @@ export const DescriptionTextInput = styled.TextInput`
   margin: 3%;
   width: 100%;
   font-size: 22px;
+  margin-bottom: 3%;
 `
 
 export const ExpenseValueTextInput = styled.TextInput`
@@ -118,6 +123,7 @@ export const ExpenseValueTextInput = styled.TextInput`
   border: 0px solid ${props => props.color};
   border-bottom-width: 1px;
   width: 150px;
+  margin-bottom: 3%;
 `
 
 export {

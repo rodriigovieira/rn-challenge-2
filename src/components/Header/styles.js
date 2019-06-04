@@ -1,8 +1,8 @@
 import styled from "styled-components/native"
 import { getStatusBarHeight } from "react-native-status-bar-height"
-import { Dimensions } from "react-native"
+import { Dimensions, Platform } from "react-native"
 
-const statusBarHeight = Number(getStatusBarHeight())
+const statusBarHeight = Platform.OS === "android" ? 0 : Number(getStatusBarHeight())
 
 const screenFraction = Dimensions.get("window").height / 16
 

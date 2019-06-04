@@ -1,4 +1,4 @@
-package com.expensestracker;
+package com.rodrigo.vieira.expensestracker;
 
 import android.app.Application;
 
@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import ui.bottomactionsheet.RNBottomActionSheetPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -31,7 +30,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNGestureHandlerPackage(),
             new RNCWebViewPackage(),
             new VectorIconsPackage(),
-            new RNBottomActionSheetPackage(),
             new AsyncStoragePackage()
       );
     }

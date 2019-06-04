@@ -8,7 +8,10 @@ import {
   View,
   Animated,
   Text,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Dimensions
 } from "react-native"
 import { Mutation } from "react-apollo"
 
@@ -162,7 +165,8 @@ const AddExpenseModal = ({
 
         return (
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <KeyboardAvoidingView behavior="padding" enabled>
+            {/* <ScrollView> */}
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} enabled>
               <ContentContainer>
                 <ModalTitle>
                   <ModalTitleText>Create Expense</ModalTitleText>
@@ -255,7 +259,7 @@ const AddExpenseModal = ({
                     shadowOffset: { width: 0, height: 0 },
                     shadowColor: "rgba(0,0,0,.2)",
                     shaddowRadius: 15,
-                    shadowOpacity: 1,
+                    shadowOpacity: 1
                   }}
                   color={color}
                   onPress={() => handleCreate(createExpenseFunction)}
@@ -268,6 +272,7 @@ const AddExpenseModal = ({
                 </ConfirmButton>
               </ContentContainer>
             </KeyboardAvoidingView>
+            {/* </ScrollView> */}
           </TouchableWithoutFeedback>
         )
       }}
