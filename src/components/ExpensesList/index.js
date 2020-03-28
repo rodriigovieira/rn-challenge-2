@@ -41,7 +41,7 @@ const ExpensesList = ({ navigation }) => {
       `}
     >
       {({
-        data: { showUserExpenses }, error, loading, refetch
+        data, error, loading, refetch
       }) => {
         if (loading) {
           return (
@@ -51,21 +51,25 @@ const ExpensesList = ({ navigation }) => {
           )
         }
 
-        const subscription1 = navigation.addListener("willFocus", (willFocus) => {
+        const subscription1 = navigation.addListener("willFocus", () => {
           refetch()
         })
 
-        const subscription2 = navigation.addListener("didFocus", (willFocus) => {
+        const subscription2 = navigation.addListener("didFocus", () => {
           subscription1.remove()
 
           subscription2.remove()
         })
 
-        if (error) navigation.navigate("WelcomePage")
+        if (error) {
+          navigation.navigate("WelcomePage")
+
+          return null
+        }
 
         return (
           <FlatList
-            data={showUserExpenses}
+            data={data.showUserExpenses}
             contentContainerStyle={{
               alignItems: "stretch",
               // width: "100%",
@@ -73,7 +77,7 @@ const ExpensesList = ({ navigation }) => {
               marginRight: 20
             }}
             style={{
-              width: "100%",
+              width: "100%"
             }}
             onRefresh={refetch}
             refreshing={loading}
